@@ -73,7 +73,6 @@ namespace Spine.DI {
 					var dependency = injector.repository.Retrieve( injection.TargetType );
 
 					// override
-					Debug.Log( $"injection {injection.TargetType} : {injection.TargetType == typeof(TValue)}, value: {value}" );
 					if (injection.TargetType == typeof(TValue)) {
 						dependency = value;
 					}

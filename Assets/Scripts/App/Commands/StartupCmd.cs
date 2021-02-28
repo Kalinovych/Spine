@@ -15,9 +15,8 @@ readonly struct StartupCmd : ICommand {
 	readonly EventHub eventHub;
 
 	public void Execute() {
-		Debug.Log( $"logger: {logger}, eventHub: {eventHub}" );
 		logger.Log( $"Startup: {@event.msg}" );
 
-		eventHub.Emit( default(OpenSceneRequest) );
+		//eventHub.Emit( default(OpenSceneRequest) );
 	}
 }

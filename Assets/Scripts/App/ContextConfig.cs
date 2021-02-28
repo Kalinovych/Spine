@@ -7,7 +7,7 @@ using UnityEngine;
 
 readonly struct ContextConfig : IContextConfig {
 	[Inject]
-	readonly EventHub _eventHub;
+	readonly EventHub eventHub;
 
 	[Inject]
 	readonly Injector injector;
@@ -19,7 +19,7 @@ readonly struct ContextConfig : IContextConfig {
 		On<OpenSceneRequest>().Do<LoadSceneCmd>();
 	}
 
-	SignalMapper<T> On<T>() => new SignalMapper<T>( injector, _eventHub );
+	SignalMapper<T> On<T>() => new SignalMapper<T>( injector, eventHub );
 }
 
 interface ILogger {

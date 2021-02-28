@@ -1,23 +1,27 @@
 using Spine;
 using UnityEngine;
 
-#pragma warning disable 649
-#pragma warning disable 169
+readonly struct Bootstrap {
+	[RuntimeInitializeOnLoadMethod]
+	static void Init() {
+		var go = new GameObject( "[AppContext]" );
+		go.AddComponent<AppContextBehaviour>();
+		Object.DontDestroyOnLoad( go );
+	}
+}
 
-public class Bootstrap : MonoBehaviour {
-	Context _context;
+public static class AppContext {
+	public static Context current;
+}
 
+public class AppContextBehaviour : MonoBehaviour {
 	void Awake() {
-		Configure();
+		AppContext.current = new Context()
+			.Configure<ContextConfig>()
+			.Initialize();
 	}
 
 	void Start() {
-		_context.Emit( new LaunchEvent( "Hello Spine!" ) );
-	}
-
-	void Configure() {
-		_context = new Context()
-			.Configure<ContextConfig>()
-			.Initialize();
+		AppContext.current.Emit( new LaunchEvent( "Hello Spine!" ) );
 	}
 }
