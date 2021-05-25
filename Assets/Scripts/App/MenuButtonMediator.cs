@@ -6,14 +6,18 @@ public class MenuButtonMediator : Mediator {
 	Button button;
 
 	void Awake() {
+		print( $"MenuButtonMediator.Awake, eventHub: {eventHub}" );
 		button = GetComponent<Button>();
+		print( $"Awake end, eventHub: {eventHub}" );
 	}
 
 	void OnEnable() {
+		print( $"OnEnable, eventHub: {eventHub}" );
 		button.onClick.AddListener( OnClick );
 	}
 
 	void OnClick() {
+		print( $"OnClick, eventHub: {eventHub}" );
 		Emit( new ButtonClickEvent() );
 	}
 }

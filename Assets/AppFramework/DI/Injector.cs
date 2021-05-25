@@ -106,9 +106,11 @@ namespace Spine.DI {
 		/// </summary>
 		/// <param name="target"></param>
 		public void InjectInto(object target) {
+			Debug.Log( $"InjectInto: {target}" );
 			var injectionPoints = TypeDescriber.GetInjectionPoints( target.GetType() );
 
 			foreach (var injection in injectionPoints) {
+				Debug.Log( $"\tpoint: {injection.Name} : {injection.TargetType}" );
 				var dependency = repository.Retrieve( injection.TargetType );
 
 				if (dependency == null && mappings.TryGetValue( injection.TargetType, out var provider )) {
@@ -119,7 +121,8 @@ namespace Spine.DI {
 					Debug.LogError( $">> \t{injection.Name} = <i>[missing required reference]</i>({injection.TargetType.Name})" );
 					continue;
 				}
-
+				
+				Debug.Log( $"\tinject: {target} <- {dependency}" );
 				injection.ApplyTo( target, dependency );
 			}
 		}
@@ -279,8 +282,8 @@ namespace Spine.DI {
 	}
 
 	// Field
-	struct FieldInjectionPoint : IInjectionPoint {
-		public bool isRequired { get; private set; }
+	readonly struct FieldInjectionPoint : IInjectionPoint {
+		public bool isRequired { get; }
 
 		public Type TargetType => field.FieldType;
 
