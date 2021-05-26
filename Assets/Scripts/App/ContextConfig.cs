@@ -1,4 +1,6 @@
 ﻿using System;
+using App;
+using App.Commands;
 using Spine.Signals;
 using Spine;
 using Spine.DI;
@@ -14,11 +16,13 @@ readonly struct ContextConfig : IContextConfig {
 	readonly Injector injector;
 
 	public void Configure() {
+		injector.Map<MenuModel>( new MenuModel() );
 		injector.Map<ILogger>( new UnityWarnLogger() );
 		injector.Map<LogAction>( UnityWarnLogger.LogStatic );
 
 		On<LaunchEvent>().Do<StartupCmd>();
 		On<OpenSceneRequest>().Do<LoadSceneCmd>();
+		On<MenuItemsSelect>().Do<SelectMenuItemCmd>();
 	}
 
 	SignalMapper<T> On<T>() => new SignalMapper<T>( injector, eventHub );

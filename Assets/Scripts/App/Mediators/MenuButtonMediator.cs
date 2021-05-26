@@ -1,23 +1,15 @@
-﻿using Spine.DI;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent( typeof(Button) )]
 public class MenuButtonMediator : Mediator {
+	public int menuItemIndex;
+	
 	Button button;
 
-	[Inject]
-	ILogger logger;
-
-	[Inject]
-	LogAction Log;
-
 	protected override void Awake() {
-		print( "MenuButtonMediator.Awake" );
 		base.Awake();
 		button = GetComponent<Button>();
-		logger.Log( "Hello" );
-		Log( "Hello from the LogAction" );
 	}
 
 	void OnEnable() {
@@ -27,9 +19,14 @@ public class MenuButtonMediator : Mediator {
 
 	void OnClick() {
 		print( $"OnClick, eventHub: {eventHub}" );
-		Emit( new ButtonClickEvent() );
+		Emit( new MenuItemsSelect( menuItemIndex ) );
 	}
 }
 
-public struct ButtonClickEvent {
+public readonly struct MenuItemsSelect {
+	public readonly int index;
+
+	public MenuItemsSelect(int index) {
+		this.index = index;
+	}
 }
