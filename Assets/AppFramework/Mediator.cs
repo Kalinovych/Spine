@@ -10,10 +10,9 @@ public class Mediator : MonoBehaviour {
 
 	protected void Emit<T>(T eventSignal) => eventHub.Emit( eventSignal );
 
-	void Awake() {
-		print( $"Mediator.Awake: {this}" );
+	protected virtual void Awake() {
+		print( "Mediator.Awake" );
 		AppContext.Mediate( this );
-		print( $"eventHub: {eventHub}" );
 	}
 
 	void Start() {

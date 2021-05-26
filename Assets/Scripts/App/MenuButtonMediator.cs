@@ -1,14 +1,23 @@
-﻿using UnityEngine;
+﻿using Spine.DI;
+using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent( typeof(Button) )]
 public class MenuButtonMediator : Mediator {
 	Button button;
 
-	void Awake() {
-		print( $"MenuButtonMediator.Awake, eventHub: {eventHub}" );
+	[Inject]
+	ILogger logger;
+
+	[Inject]
+	LogAction Log;
+
+	protected override void Awake() {
+		print( "MenuButtonMediator.Awake" );
+		base.Awake();
 		button = GetComponent<Button>();
-		print( $"Awake end, eventHub: {eventHub}" );
+		logger.Log( "Hello" );
+		Log( "Hello from the LogAction" );
 	}
 
 	void OnEnable() {
