@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using App;
+using Spine.DI;
+using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent( typeof(Button) )]
@@ -6,6 +8,9 @@ public class MenuButtonMediator : Mediator {
 	public int menuItemIndex;
 	
 	Button button;
+
+	[Inject]
+	MenuModel menuModel;
 
 	protected override void Awake() {
 		base.Awake();
@@ -19,14 +24,14 @@ public class MenuButtonMediator : Mediator {
 
 	void OnClick() {
 		print( $"OnClick, eventHub: {eventHub}" );
-		Emit( new MenuItemsSelect( menuItemIndex ) );
+		Emit( new MenuItemSelect( menuItemIndex ) );
 	}
 }
 
-public readonly struct MenuItemsSelect {
+public readonly struct MenuItemSelect {
 	public readonly int index;
 
-	public MenuItemsSelect(int index) {
+	public MenuItemSelect(int index) {
 		this.index = index;
 	}
 }

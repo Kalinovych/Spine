@@ -22,7 +22,7 @@ readonly struct ContextConfig : IContextConfig {
 
 		On<LaunchEvent>().Do<StartupCmd>();
 		On<OpenSceneRequest>().Do<LoadSceneCmd>();
-		On<MenuItemsSelect>().Do<SelectMenuItemCmd>();
+		On<MenuItemSelect>().Do<SelectMenuItemCmd>();
 	}
 
 	SignalMapper<T> On<T>() => new SignalMapper<T>( injector, eventHub );

@@ -7,7 +7,7 @@ namespace App.Commands {
 		MenuModel menuModel;
 
 		[Inject]
-		MenuItemsSelect selectEvent;
+		MenuItemSelect selectEvent;
 
 		[Inject]
 		LogAction Log;

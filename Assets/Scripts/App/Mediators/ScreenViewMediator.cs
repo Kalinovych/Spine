@@ -23,7 +23,7 @@ public class ScreenViewMediator : Mediator {
 	protected override void Awake() {
 		base.Awake();
 		
-		eventHub.On<MenuItemsSelect>( viewIndex => { UpdateView(); } );
+		eventHub.On<MenuItemSelect>( viewIndex => { UpdateView(); } );
 	}
 
 	void OnEnable() {
