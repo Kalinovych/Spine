@@ -1,7 +1,5 @@
-using System;
 using App;
 using Spine.DI;
-using Spine.Signals;
 using UnityEngine;
 
 public class ScreenViewMediator : Mediator {
@@ -10,10 +8,7 @@ public class ScreenViewMediator : Mediator {
 	[Inject]
 	MenuModel menuModel;
 
-	[Inject]
-	EventHub eventHub;
-
-	readonly Color[] colors = new[] {Color.black, Color.white, Color.red, Color.green, Color.blue,};
+	readonly Color[] colors = { Color.black, Color.white, Color.red, Color.green, Color.blue, };
 
 	void UpdateView() {
 		var material = screenMesh.material;
@@ -22,7 +17,7 @@ public class ScreenViewMediator : Mediator {
 
 	protected override void Awake() {
 		base.Awake();
-		
+
 		eventHub.On<MenuItemSelect>( viewIndex => { UpdateView(); } );
 	}
 

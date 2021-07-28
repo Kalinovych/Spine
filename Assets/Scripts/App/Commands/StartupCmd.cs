@@ -2,17 +2,12 @@
 using Spine.DI;
 using UnityEngine;
 
-#pragma warning disable 649
-
 readonly struct StartupCmd : ICommand {
 	[Inject]
 	readonly LaunchEvent @event;
 
 	[Inject]
 	readonly ILogger logger;
-
-	[Inject]
-	readonly EventHub eventHub;
 
 	public void Execute() {
 		logger.Log( $"Startup: {@event.msg}" );

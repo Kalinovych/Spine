@@ -17,8 +17,8 @@ readonly struct ContextConfig : IContextConfig {
 
 	public void Configure() {
 		injector.Map<MenuModel>( new MenuModel() );
-		injector.Map<ILogger>( new UnityWarnLogger() );
-		injector.Map<LogAction>( UnityWarnLogger.LogStatic );
+		injector.Map<ILogger>( new DefaultLogger() );
+		injector.Map<LogAction>( DefaultLogger.LogWarnStatic );
 
 		On<LaunchEvent>().Do<StartupCmd>();
 		On<OpenSceneRequest>().Do<LoadSceneCmd>();
@@ -34,12 +34,12 @@ interface ILogger {
 	public void Log(object msg);
 }
 
-class UnityWarnLogger : ILogger {
+class DefaultLogger : ILogger {
 	public void Log(object msg) {
 		Debug.LogWarning( msg );
 	}
 
-	public static void LogStatic(object msg) {
+	public static void LogWarnStatic(object msg) {
 		Debug.LogWarning( msg );
 	}
 }

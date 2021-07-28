@@ -4,10 +4,10 @@ using Spine.Signals;
 namespace App.Commands {
 	public struct SelectMenuItemCmd : ICommand {
 		[Inject]
-		MenuModel menuModel;
-
-		[Inject]
 		MenuItemSelect selectEvent;
+		
+		[Inject]
+		MenuModel menuModel;
 
 		[Inject]
 		LogAction Log;
