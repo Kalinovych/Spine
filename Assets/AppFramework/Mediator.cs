@@ -2,7 +2,7 @@
 using Spine.Signals;
 using UnityEngine;
 
-public class Mediator : MonoBehaviour {
+public abstract class Mediator : MonoBehaviour {
 	[Inject]
 	protected readonly EventHub eventHub;
 
@@ -24,4 +24,8 @@ public class Mediator : MonoBehaviour {
 	void OnTransformParentChanged() {
 		print( "Mediator.OnTransformParentChanged" );
 	}
+}
+
+interface IMediator {
+	void OnCreate();
 }

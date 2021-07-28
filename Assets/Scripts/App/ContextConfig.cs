@@ -1,12 +1,9 @@
-﻿using System;
-using App;
+﻿using App;
 using App.Commands;
 using Spine.Signals;
 using Spine;
 using Spine.DI;
 using UnityEngine;
-
-#pragma warning disable 649
 
 readonly struct ContextConfig : IContextConfig {
 	[Inject]
@@ -28,6 +25,7 @@ readonly struct ContextConfig : IContextConfig {
 	SignalMapper<T> On<T>() => new SignalMapper<T>( injector, eventHub );
 }
 
+#region Helpers
 public delegate void LogAction(object msg);
 
 interface ILogger {
@@ -43,3 +41,6 @@ class DefaultLogger : ILogger {
 		Debug.LogWarning( msg );
 	}
 }
+
+#endregion
+
