@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Spine.DI {
+	[MeansImplicitUse]
 	public sealed class InjectAttribute : Attribute {
 		public readonly bool isOptional = false;
 
