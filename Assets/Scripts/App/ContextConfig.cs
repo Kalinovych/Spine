@@ -5,7 +5,6 @@ using Spine.Signals;
 using Spine;
 using Spine.DI;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 readonly struct ContextConfig : IContextConfig {
@@ -37,14 +36,6 @@ readonly struct ContextConfig : IContextConfig {
 }
 
 #region Helpers
-
-
-struct LoadAdditional : ICommand {
-	public void Execute() {
-		SceneManager.LoadScene( "Additional", LoadSceneMode.Additive );
-	}
-}
-
 
 #endregion
 

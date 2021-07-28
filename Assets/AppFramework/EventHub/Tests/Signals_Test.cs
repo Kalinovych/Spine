@@ -122,7 +122,7 @@ public class Signals_Test
 	public void RemovePasses()
 	{
 		_eventHub.On<TestSignal>( TestSignal_FailHandler, false );
-		_eventHub.Off<TestSignal>( TestSignal_FailHandler, false );
+		_eventHub.Off<TestSignal>( TestSignal_FailHandler );
 
 		_eventHub.Emit( new TestSignal() );
 		_eventHub.Emit( new TestSignal() );
@@ -150,7 +150,7 @@ public class Signals_Test
 
 	private void RemoveSelfHandler(TestSignal signal)
 	{
-		_eventHub.Off<TestSignal>( RemoveSelfHandler, false );
+		_eventHub.Off<TestSignal>( RemoveSelfHandler );
 	}
 
 	[Test]

@@ -10,6 +10,7 @@ public abstract class Mediator : MonoBehaviour {
 	protected void Emit<T>(T eventSignal) => eventHub.Emit( eventSignal );
 
 	protected void OnEvent<T>(Action<T> callback) => eventHub.On( callback );
+	protected void OffEvent<T>(Action<T> callback) => eventHub.Off( callback );
 
 	protected virtual void Awake() {
 		print( "Mediator.Awake" );
@@ -20,5 +21,11 @@ public abstract class Mediator : MonoBehaviour {
 	}
 
 	protected virtual void OnInitialized() {}
+	protected virtual void OnPreDestroy() {}
+
+	protected virtual void OnDestroy() {
+		OnPreDestroy();
+		AppContext.Release( this );
+	}
 }
 

@@ -16,9 +16,13 @@ public class ScreenViewMediator : Mediator {
 	}
 
 	protected override void OnInitialized() {
-		OnEvent<MenuItemSelect>( viewIndex => {
-			UpdateView();
-		} );
+		OnEvent<MenuItemSelect>( OnMenuItemSelect );
+	}
+
+	void OnMenuItemSelect(MenuItemSelect _) => UpdateView();
+
+	protected override void OnPreDestroy() {
+		OffEvent<MenuItemSelect>( OnMenuItemSelect );
 	}
 
 	void OnEnable() {

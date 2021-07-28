@@ -135,6 +135,13 @@ namespace Spine.DI {
 			}
 		}
 
+		public void Clear(object target) {
+			var injectionPoints = TypeDescriber.GetInjectionPoints( target.GetType() );
+			foreach (var injection in injectionPoints) {
+				injection.ApplyTo( target, null );
+			}
+		}
+
 		public void InjectInto<T>(T target) {
 			var injectionPoints = TypeDescriber.GetInjectionPoints( typeof(T) );
 

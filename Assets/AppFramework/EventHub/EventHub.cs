@@ -18,8 +18,8 @@ namespace Spine.Signals {
 			AddReceiver( handler, once: true );
 		}
 
-		public void Off<T>(Action<T> handler, bool once) {
-			RemoveReceiver( handler, once );
+		public void Off<T>(Action<T> handler) {
+			RemoveReceiver( handler, false );
 		}
 
 		public void OffAll() {

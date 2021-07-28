@@ -1,5 +1,6 @@
 ﻿using Spine.DI;
 using Spine.Signals;
+using UnityEngine.SceneManagement;
 
 namespace App.Commands {
 	public struct SelectMenuItemCmd : ICommand {
@@ -15,6 +16,9 @@ namespace App.Commands {
 		public void Execute() {
 			Log( $"SelectMenuItemCmd: {selectEvent.index}" );
 			menuModel.screenIndex = selectEvent.index;
+
+			if (menuModel.screenIndex == 4)
+				SceneManager.UnloadSceneAsync( "Additional" );
 		}
 	}
 }

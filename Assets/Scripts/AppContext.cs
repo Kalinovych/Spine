@@ -20,4 +20,9 @@ public static class AppContext {
 		Log( $"Mediate: {view}" );
 		current.injector.InjectInto( view );
 	}
+	
+	public static void Release(object view) {
+		Log( $"Mediate: {view}" );
+		current.injector.Clear( view );
+	}
 }
