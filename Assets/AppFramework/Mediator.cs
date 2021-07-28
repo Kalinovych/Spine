@@ -1,4 +1,5 @@
-﻿using Spine.DI;
+﻿using System;
+using Spine.DI;
 using Spine.Signals;
 using UnityEngine;
 
@@ -8,24 +9,19 @@ public abstract class Mediator : MonoBehaviour {
 
 	protected void Emit<T>(T eventSignal) => eventHub.Emit( eventSignal );
 
+	protected void OnEvent<T>(Action<T> callback) => eventHub.On( callback );
+
 	protected virtual void Awake() {
 		print( "Mediator.Awake" );
+		
 		AppContext.Mediate( this );
+
+		OnInitialized();
 	}
 
-	void Start() {
-		print( $"Mediator.OnEnable: {this}" );
-	}
-
-	void OnTransformChildrenChanged() {
-		print( "Mediator.OnTransformChildrenChanged" );
-	}
-
-	void OnTransformParentChanged() {
-		print( "Mediator.OnTransformParentChanged" );
-	}
+	protected virtual void OnInitialized() {}
 }
 
 interface IMediator {
-	void OnCreate();
+	void Initialize();
 }

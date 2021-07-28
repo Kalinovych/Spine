@@ -15,10 +15,10 @@ public class ScreenViewMediator : Mediator {
 		material.color = colors[menuModel.screenIndex];
 	}
 
-	protected override void Awake() {
-		base.Awake();
-
-		eventHub.On<MenuItemSelect>( viewIndex => { UpdateView(); } );
+	protected override void OnInitialized() {
+		OnEvent<MenuItemSelect>( viewIndex => {
+			UpdateView();
+		} );
 	}
 
 	void OnEnable() {

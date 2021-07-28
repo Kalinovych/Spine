@@ -11,9 +11,8 @@ public class MenuButtonMediator : Mediator {
 
 	[Inject]
 	MenuModel menuModel;
-
-	protected override void Awake() {
-		base.Awake();
+	
+	protected override void OnInitialized() {
 		button = GetComponent<Button>();
 	}
 
@@ -23,7 +22,6 @@ public class MenuButtonMediator : Mediator {
 	}
 
 	void OnClick() {
-		print( $"OnClick, eventHub: {eventHub}" );
 		Emit( new MenuItemSelect( menuItemIndex ) );
 	}
 }
