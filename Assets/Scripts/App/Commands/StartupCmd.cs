@@ -1,17 +1,14 @@
-﻿using Spine.Signals;
-using Spine.DI;
-using UnityEngine;
+﻿using Spine.DI;
+using Spine.Signals;
 
 readonly struct StartupCmd : ICommand {
 	[Inject]
 	readonly LaunchEvent @event;
 
 	[Inject]
-	readonly ILogger logger;
+	readonly LogAction Log;
 
 	public void Execute() {
-		logger.Log( $"Startup: {@event.msg}" );
-
-		//eventHub.Emit( default(OpenSceneRequest) );
+		Log( $"Startup: {@event.msg}" );
 	}
 }

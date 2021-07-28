@@ -36,11 +36,17 @@ namespace Spine.DI {
 		}
 
 		public void Map<T>() where T : new() {
-			mappings.Add( typeof(T), () => new T() );
+			mappings.Add( typeof(T), target => new T() );
 		}
 
 		public void Map<T>(T instance) {
-			mappings.Add( typeof(T), () => instance );
+			mappings.Add( typeof(T), target => instance );
+		}
+
+		//public delegate T DependencyProvider<out T>();
+		
+		public void Map<T>(DependencyProvider provider) {
+			mappings.Add( typeof(T), provider );
 		}
 
 		public void Unmap<T>() => mappings.Remove( typeof(T) );
@@ -66,7 +72,7 @@ namespace Spine.DI {
 				this.value = value;
 			}
 
-			public T Inject<T>() where T : struct {
+			public T Create<T>() where T : struct {
 				object target = default(T);
 
 				var injectionPoints = TypeDescriber.GetInjectionPoints( target.GetType() );
@@ -80,7 +86,7 @@ namespace Spine.DI {
 					}
 
 					if (dependency == null && injector.mappings.TryGetValue( injection.TargetType, out var provider )) {
-						dependency = provider();
+						dependency = provider(target);
 					}
 
 					if (dependency == null && injection.isRequired) {
@@ -116,7 +122,7 @@ namespace Spine.DI {
 				var dependency = repository.Retrieve( injection.TargetType );
 
 				if (dependency == null && mappings.TryGetValue( injection.TargetType, out var provider )) {
-					dependency = provider();
+					dependency = provider(target);
 				}
 
 				if (dependency == null && injection.isRequired) {
@@ -136,7 +142,7 @@ namespace Spine.DI {
 				var dependency = repository.Retrieve( injection.TargetType );
 
 				if (dependency is null && mappings.TryGetValue( injection.TargetType, out var provider )) {
-					dependency = provider();
+					dependency = provider(target);
 				}
 
 				if (dependency == null && injection.isRequired) {
@@ -150,7 +156,7 @@ namespace Spine.DI {
 
 		readonly DependencyRepository repository = new DependencyRepository();
 
-		delegate object DependencyProvider();
+		public delegate object DependencyProvider(object target);
 
 		readonly Dictionary<Type, DependencyProvider> mappings = new Dictionary<Type, DependencyProvider>();
 	}

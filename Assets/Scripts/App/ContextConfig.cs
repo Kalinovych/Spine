@@ -1,10 +1,12 @@
 ﻿using App;
 using App.Commands;
+using App.Utils;
 using Spine.Signals;
 using Spine;
 using Spine.DI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 readonly struct ContextConfig : IContextConfig {
 	[Inject]
@@ -14,9 +16,14 @@ readonly struct ContextConfig : IContextConfig {
 	readonly Injector injector;
 
 	public void Configure() {
-		injector.Map<MenuModel>( new MenuModel() );
-		injector.Map<ILogger>( new DefaultLogger() );
-		injector.Map<LogAction>( DefaultLogger.LogStatic );
+		injector.Map<Button>( component => {
+			if (component is MonoBehaviour c)
+				return c.GetComponent<Button>( );
+			return null;
+		});
+		
+		injector.Map( new MenuModel() );
+		injector.Map<LogAction>( Debug.Log );
 
 		On<LaunchEvent>().Do<StartupCmd>();
 		On<OpenSceneRequest>().Do<LoadSceneCmd>();
@@ -30,7 +37,7 @@ readonly struct ContextConfig : IContextConfig {
 }
 
 #region Helpers
-public delegate void LogAction(object msg);
+
 
 struct LoadAdditional : ICommand {
 	public void Execute() {
@@ -38,27 +45,6 @@ struct LoadAdditional : ICommand {
 	}
 }
 
-interface ILogger {
-	public void Log(object msg);
-	public void Warn(object msg);
-}
-
-class DefaultLogger : ILogger {
-	public void Log(object msg) {
-		Debug.LogWarning( msg );
-	}
-
-	public void Warn(object msg) {
-		Debug.LogWarning( msg );
-	}
-
-	public static void LogStatic(object msg) {
-		Debug.Log( msg );
-	}
-	public static void LogWarnStatic(object msg) {
-		Debug.LogWarning( msg );
-	}
-}
 
 #endregion
 

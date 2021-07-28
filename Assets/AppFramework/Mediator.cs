@@ -22,6 +22,3 @@ public abstract class Mediator : MonoBehaviour {
 	protected virtual void OnInitialized() {}
 }
 
-interface IMediator {
-	void Initialize();
-}

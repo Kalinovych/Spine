@@ -7,13 +7,14 @@ using UnityEngine.UI;
 public class MenuButtonMediator : Mediator {
 	public int menuItemIndex;
 	
+	[Inject]
 	Button button;
 
 	[Inject]
 	MenuModel menuModel;
 	
 	protected override void OnInitialized() {
-		button = GetComponent<Button>();
+		//button = GetComponent<Button>();
 	}
 
 	void OnEnable() {

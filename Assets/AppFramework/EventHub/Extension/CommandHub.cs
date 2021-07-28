@@ -16,7 +16,7 @@ namespace Spine.Signals {
 		}
 	}
 
-	readonly struct CommandExecutor<T> where T : struct, ICommand {
+	readonly struct CommandExecutor<TCommand> where TCommand : struct, ICommand{
 		readonly Injector injector;
 
 		public CommandExecutor(Injector injector) {
@@ -25,7 +25,7 @@ namespace Spine.Signals {
 
 		public void Execute<TSignal>(TSignal signal) {
 			// create
-			T cmd = injector.With( signal ).Inject<T>();
+			TCommand cmd = injector.With( signal ).Create<TCommand>();
 			// execute
 			cmd.Execute();
 		}
@@ -33,5 +33,10 @@ namespace Spine.Signals {
 
 	public interface ICommand {
 		void Execute();
+	}
+
+
+	public interface ICommand<in T> {
+		void Execute(T signal);
 	}
 }
