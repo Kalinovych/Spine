@@ -17,7 +17,7 @@ namespace App.Commands {
 			Log( $"SelectMenuItemCmd: {selectEvent.index}" );
 			menuModel.screenIndex = selectEvent.index;
 
-			if (menuModel.screenIndex == 4)
+			if (menuModel.screenIndex == 4 && SceneManager.GetSceneByName( "Additional" ).isLoaded)
 				SceneManager.UnloadSceneAsync( "Additional" );
 		}
 	}
