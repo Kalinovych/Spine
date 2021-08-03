@@ -2,9 +2,9 @@
 using Spine.Signals;
 
 namespace Spine {
-	public abstract class Model {
+	public class Model {
 		[Inject]
-		protected EventHub eventHub;
+		protected readonly EventHub eventHub;
 
 		protected void Emit<T>(T eventSignal) => eventHub.Emit( eventSignal );
 	}

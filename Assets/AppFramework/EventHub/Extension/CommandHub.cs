@@ -1,11 +1,18 @@
 using Spine.DI;
 
 namespace Spine.Signals {
-	public readonly struct SignalMapper<T> {
+	public class CommandHub {
+		[Inject] Injector injector;
+		[Inject] EventHub eventHub;
+		
+		public EventMapper<T> On<T>() => new EventMapper<T>( injector, eventHub );
+	}
+	
+	public readonly struct EventMapper<T> {
 		readonly Injector injector;
 		readonly EventHub eventHub;
 
-		public SignalMapper(Injector injector, EventHub eventHub) {
+		public EventMapper(Injector injector, EventHub eventHub) {
 			this.injector = injector;
 			this.eventHub = eventHub;
 		}

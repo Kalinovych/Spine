@@ -6,10 +6,6 @@ namespace Spine.Signals {
 	public class EventHub {
 		private readonly ChannelMap channelMap = new ChannelMap();
 
-		public void On<T>(Action<T> handler, bool once) {
-			AddReceiver( handler, once );
-		}
-
 		public void On<T>(Action<T> handler) {
 			AddReceiver( handler, once: false );
 		}
@@ -20,6 +16,10 @@ namespace Spine.Signals {
 
 		public void Off<T>(Action<T> handler) {
 			RemoveReceiver( handler, false );
+		}
+
+		public void OffOnce<T>(Action<T> handler) {
+			RemoveReceiver( handler, true );
 		}
 
 		public void OffAll() {

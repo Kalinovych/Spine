@@ -1,8 +1,13 @@
 ﻿using Spine;
+using UnityEngine;
 
 namespace App {
 	public class MenuModel : Model {
 		int screenIndex;
+
+		public MenuModel() {
+			Debug.LogWarning( $"MENU MODEL" );
+		}
 
 		public int ScreenIndex {
 			get => screenIndex;

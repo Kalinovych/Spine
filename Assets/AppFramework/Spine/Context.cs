@@ -13,22 +13,28 @@ namespace Spine {
 	 * Hardcoded context so far
 	 */
 	public class Context {
-		readonly Configurator configurator = new Configurator();
 		public readonly Injector injector = new Injector();
-		readonly EventHub eventHub = new EventHub();
-		readonly MediatorHub mediatorHub = new MediatorHub();
+		readonly Configurator installer = new Configurator();
+		readonly Configurator configurator = new Configurator();
 
 		static void Log(object msg) => Debug.Log( $"[Context] {msg}" );
 
+		public Context Install(IContextExtension ext) {
+			installer.Add( () => ext.Extend( this ) );
+			return this;
+		}
+
 		public Context Configure<T>() where T : struct, IContextConfig {
 			Log( $"Configure<{typeof(T)}>" );
-			configurator.Add( () => injector.Inject<T>().Configure() );
+			configurator.Add( () => injector.InjectIn<T>().Configure() );
 			return this;
 		}
 
 		public Context Initialize() {
 			Log( "Initialize" );
-			injector.AutoMap( injector, eventHub, mediatorHub );
+			injector.One( this );
+			injector.One( injector );
+			installer.Execute();
 			configurator.Execute();
 			return this;
 		}
@@ -43,6 +49,16 @@ namespace Spine {
 		public void Execute() {
 			while (queue.Count > 0)
 				queue.Dequeue()();
+		}
+	}
+
+	public interface IContextExtension {
+		void Extend(Context context);
+	}
+
+	public struct ContextExtension {
+		public void Extend(Context context) {
+			
 		}
 	}
 }

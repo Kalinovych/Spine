@@ -1,4 +1,5 @@
-﻿using Spine.DI;
+﻿using Spine;
+using Spine.DI;
 using UnityEngine;
 using UnityEngine.UI;
 

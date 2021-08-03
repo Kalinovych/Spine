@@ -44,7 +44,7 @@ public class Injector_Test {
 
 		var target = new InjectionTarget();
 
-		injector.Inject( target );
+		injector.InjectIn( target );
 
 		Assert.AreEqual( subject, target.subject );
 		Assert.AreEqual( id, target.id );
@@ -81,7 +81,7 @@ public class Injector_Test {
 		injector.AutoMap( subject, id );
 
 		var target = new InjectionTarget();
-		injector.Inject( target );
+		injector.InjectIn( target );
 		Assert.AreEqual( subject, target.subject );
 		Assert.AreEqual( id, target.id );
 	}
@@ -98,7 +98,7 @@ public class Injector_Test {
 		var text = "test_text";
 		injector.AutoMap( text );
 		var target = new PrivateInjectTarget();
-		injector.Inject( target );
+		injector.InjectIn( target );
 		Assert.AreEqual( text, target.GetText() );
 	}
 
@@ -114,7 +114,7 @@ public class Injector_Test {
 
 		LogAssert.Expect( UnityEngine.LogType.Error, new Regex( @"(?<error>)", RegexOptions.IgnoreCase ) );
 
-		injector.Inject( target );
+		injector.InjectIn( target );
 	}
 
 	class PropertyInjectTarget {
@@ -129,7 +129,7 @@ public class Injector_Test {
 		injector.AutoMap( subject );
 
 		var target = new PropertyInjectTarget();
-		injector.Inject( target );
+		injector.InjectIn( target );
 
 		Assert.AreEqual( subject, target.Subject );
 	}
@@ -145,7 +145,7 @@ public class Injector_Test {
 
 		injector.AutoMap( subject );
 
-		var client = injector.Inject<StructInjectionClient>();
+		var client = injector.InjectIn<StructInjectionClient>();
 
 		Assert.AreEqual( subject, client.subject );
 	}
@@ -157,7 +157,7 @@ public class Injector_Test {
 		injector.AutoMap( subject );
 
 		var target = new StructInjectionClient();
-		injector.Inject( ref target );
+		injector.InjectIn( ref target );
 
 		Assert.AreEqual( subject, target.subject );
 	}

@@ -14,6 +14,12 @@ readonly struct ContextConfig : IContextConfig {
 	[Inject]
 	readonly Injector injector;
 
+	[Inject]
+	readonly MediatorHub mediatorHub;
+
+	[Inject]
+	readonly CommandHub commandHub;
+
 	public void Configure() {
 		// GO's component find & inject
 		injector.Map<Button>( component => {
@@ -22,8 +28,8 @@ readonly struct ContextConfig : IContextConfig {
 			return null;
 		});
 		
-		injector.Map<MenuModel>();
-		injector.Map<LogAction>( Debug.Log );
+		injector.One<MenuModel>();
+		injector.One<LogAction>( Debug.Log );
 
 		On<LaunchEvent>().Do<StartupCmd>();
 		On<OpenSceneRequest>().Do<LoadSceneCmd>();
@@ -33,7 +39,7 @@ readonly struct ContextConfig : IContextConfig {
 		eventHub.Emit( new LaunchEvent() );
 	}
 
-	SignalMapper<T> On<T>() => new SignalMapper<T>( injector, eventHub );
+	EventMapper<T> On<T>() => commandHub.On<T>();
 }
 
 #region Helpers

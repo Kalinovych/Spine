@@ -42,7 +42,7 @@ public class Signals_Test
 		_eventHub.On<TestSignal>( signal =>
 		{
 			Assert.Pass();
-		}, false );
+		} );
 
 		_eventHub.Emit( new TestSignal() );
 
@@ -56,17 +56,17 @@ public class Signals_Test
 		_eventHub.On<TestSignal>( signal =>
 		{
 			receivedCount++;
-		}, false );
+		} );
 		_eventHub.On<TestSignal>( signal =>
 		{
 			receivedCount++;
-		}, false );
+		} );
 		_eventHub.On<TestSignal>( signal =>
 		{
 			receivedCount++;
 			Assert.AreEqual( 3, receivedCount );
 			Assert.Pass();
-		}, false );
+		} );
 
 		_eventHub.Emit( new TestSignal() );
 
@@ -80,12 +80,12 @@ public class Signals_Test
 		_eventHub.On<TestSignal2>( signal =>
 		{
 			Assert.Fail();
-		}, false );
+		} );
 
 		_eventHub.On<TestSignal>( signal =>
 		{
 			Assert.Pass();
-		}, false );
+		} );
 
 		_eventHub.Emit( new TestSignal() );
 
@@ -96,12 +96,12 @@ public class Signals_Test
 	public void OncePasses()
 	{
 		var receivedCount = 0;
-		_eventHub.On<TestSignal>( signal =>
+		_eventHub.Once<TestSignal>( signal =>
 		{
 			receivedCount++;
 			if (receivedCount > 1)
 				Assert.Fail( "Signal received more than once" );
-		}, true );
+		} );
 
 		_eventHub.Emit( new TestSignal() );
 		_eventHub.Emit( new TestSignal() );
@@ -121,7 +121,7 @@ public class Signals_Test
 	[Test]
 	public void RemovePasses()
 	{
-		_eventHub.On<TestSignal>( TestSignal_FailHandler, false );
+		_eventHub.On<TestSignal>( TestSignal_FailHandler );
 		_eventHub.Off<TestSignal>( TestSignal_FailHandler );
 
 		_eventHub.Emit( new TestSignal() );
@@ -131,8 +131,8 @@ public class Signals_Test
 	[Test]
 	public void RemoveAllPasses()
 	{
-		_eventHub.On<TestSignal>( TestSignal_FailHandler, false );
-		_eventHub.On<TestSignal2>( TestSignal2_FailHandler, false );
+		_eventHub.On<TestSignal>( TestSignal_FailHandler );
+		_eventHub.On<TestSignal2>( TestSignal2_FailHandler );
 
 		_eventHub.OffAll();
 
@@ -143,7 +143,7 @@ public class Signals_Test
 	[Test]
 	public void RemoveFromHandlerPasses()
 	{
-		_eventHub.On<TestSignal>( RemoveSelfHandler, false );
+		_eventHub.On<TestSignal>( RemoveSelfHandler );
 		_eventHub.Emit( new TestSignal() );
 		_eventHub.Emit( new TestSignal() );
 	}
@@ -160,15 +160,15 @@ public class Signals_Test
 		_eventHub.On<TestSignal>( signal =>
 		{
 			receiveCount++;
-		}, false );
+		} );
 		_eventHub.On<TestSignal>( signal =>
 		{
 			receiveCount++;
-		}, false );
+		} );
 		_eventHub.On<TestSignal2>( signal =>
 		{
 			receiveCount++;
-		}, false );
+		} );
 
 		var stopwatch = new Stopwatch();
 		stopwatch.Start();

@@ -25,6 +25,12 @@ namespace Spine.DI {
 	/// Injector simple implementation
 	/// </summary>
 	public class Injector {
+		readonly DependencyRepository repository = new DependencyRepository();
+
+		public delegate object DependencyProvider(object target);
+		
+		readonly Dictionary<Type, DependencyProvider> mappings = new Dictionary<Type, DependencyProvider>();
+		
 		/// <summary>
 		/// Maps dependency by it's Type
 		/// </summary>
@@ -34,21 +40,20 @@ namespace Spine.DI {
 				repository.Put( item.GetType(), item );
 			}
 		}
-
-		public void Map<T>() where T : new() {
-			//mappings.Add( typeof(T), target => new T() );
-			mappings.Add( typeof(T), target => {
+		
+		public void One<T>() where T : new() {
+			Map<T>( target => {
 				var result = repository.Retrieve( typeof(T) );
 				if (result == null) {
 					result = new T();
-					Inject( result );
+					InjectIn( result );
 					repository.Put( typeof(T), result );
 				}
 				return result;
 			});
 		}
 
-		public void Map<T>(T instance) {
+		public void One<T>(T instance) {
 			mappings.Add( typeof(T), target => instance );
 		}
 
@@ -58,10 +63,10 @@ namespace Spine.DI {
 
 		public void Unmap<T>() => mappings.Remove( typeof(T) );
 
-		public T Inject<T>() where T : struct {
+		public T InjectIn<T>() where T : struct {
 			object targetBoxed = default(T);
 
-			Inject( targetBoxed );
+			InjectIn( targetBoxed );
 
 			return (T) targetBoxed;
 		}
@@ -108,10 +113,10 @@ namespace Spine.DI {
 			}
 		}
 
-		public void Inject<T>(ref T target) where T : struct {
+		public void InjectIn<T>(ref T target) where T : struct {
 			object targetBoxed = target;
 
-			Inject( targetBoxed );
+			InjectIn( targetBoxed );
 
 			target = (T) targetBoxed;
 		}
@@ -120,8 +125,9 @@ namespace Spine.DI {
 		/// Fulfill target's injection requirements
 		/// </summary>
 		/// <param name="target"></param>
-		public void Inject(object target) {
-			Debug.Log( $"InjectInto: {target}" );
+		public void InjectIn(object target) {
+			Debug.Log( $"InjectIn: {target}" );
+			
 			var injectionPoints = TypeDescriber.GetInjectionPoints( target.GetType() );
 
 			foreach (var injection in injectionPoints) {
@@ -137,8 +143,6 @@ namespace Spine.DI {
 					continue;
 				}
 
-				Debug.Log( $"dependency: {dependency is Type}" );
-				
 				Debug.Log( $"\tinject: {target} ← {dependency}" );
 				injection.ApplyTo( target, dependency );
 			}
@@ -151,7 +155,7 @@ namespace Spine.DI {
 			}
 		}
 
-		public void Inject<T>(T target) {
+		public void InjectIn<T>(T target) {
 			var injectionPoints = TypeDescriber.GetInjectionPoints( typeof(T) );
 
 			foreach (var injection in injectionPoints) {
@@ -169,12 +173,6 @@ namespace Spine.DI {
 				injection.ApplyTo( target, dependency );
 			}
 		}
-
-		readonly DependencyRepository repository = new DependencyRepository();
-
-		public delegate object DependencyProvider(object target);
-
-		readonly Dictionary<Type, DependencyProvider> mappings = new Dictionary<Type, DependencyProvider>();
 	}
 
 	/// <summary>
