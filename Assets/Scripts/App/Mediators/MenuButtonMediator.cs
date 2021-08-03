@@ -1,18 +1,14 @@
-﻿using App;
-using Spine.DI;
+﻿using Spine.DI;
 using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent( typeof(Button) )]
 public class MenuButtonMediator : Mediator {
 	public int menuItemIndex;
-	
+
 	[Inject]
 	Button button;
 
-	[Inject]
-	MenuModel menuModel;
-	
 	protected override void OnInitialized() {
 		//button = GetComponent<Button>();
 	}

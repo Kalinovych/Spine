@@ -36,15 +36,22 @@ namespace Spine.DI {
 		}
 
 		public void Map<T>() where T : new() {
-			mappings.Add( typeof(T), target => new T() );
+			//mappings.Add( typeof(T), target => new T() );
+			mappings.Add( typeof(T), target => {
+				var result = repository.Retrieve( typeof(T) );
+				if (result == null) {
+					result = new T();
+					Inject( result );
+					repository.Put( typeof(T), result );
+				}
+				return result;
+			});
 		}
 
 		public void Map<T>(T instance) {
 			mappings.Add( typeof(T), target => instance );
 		}
 
-		//public delegate T DependencyProvider<out T>();
-		
 		public void Map<T>(DependencyProvider provider) {
 			mappings.Add( typeof(T), provider );
 		}
@@ -54,7 +61,7 @@ namespace Spine.DI {
 		public T Inject<T>() where T : struct {
 			object targetBoxed = default(T);
 
-			InjectInto( targetBoxed );
+			Inject( targetBoxed );
 
 			return (T) targetBoxed;
 		}
@@ -101,10 +108,10 @@ namespace Spine.DI {
 			}
 		}
 
-		public void InjectInto<T>(ref T target) where T : struct {
+		public void Inject<T>(ref T target) where T : struct {
 			object targetBoxed = target;
 
-			InjectInto( targetBoxed );
+			Inject( targetBoxed );
 
 			target = (T) targetBoxed;
 		}
@@ -113,14 +120,14 @@ namespace Spine.DI {
 		/// Fulfill target's injection requirements
 		/// </summary>
 		/// <param name="target"></param>
-		public void InjectInto(object target) {
+		public void Inject(object target) {
 			Debug.Log( $"InjectInto: {target}" );
 			var injectionPoints = TypeDescriber.GetInjectionPoints( target.GetType() );
 
 			foreach (var injection in injectionPoints) {
 				Debug.Log( $"\tpoint: {injection.Name} : {injection.TargetType}" );
 				var dependency = repository.Retrieve( injection.TargetType );
-
+				
 				if (dependency == null && mappings.TryGetValue( injection.TargetType, out var provider )) {
 					dependency = provider(target);
 				}
@@ -129,8 +136,10 @@ namespace Spine.DI {
 					Debug.LogError( $">> \t{injection.Name} = <i>[missing required reference]</i>({injection.TargetType.Name})" );
 					continue;
 				}
+
+				Debug.Log( $"dependency: {dependency is Type}" );
 				
-				Debug.Log( $"\tinject: {target} <- {dependency}" );
+				Debug.Log( $"\tinject: {target} ← {dependency}" );
 				injection.ApplyTo( target, dependency );
 			}
 		}
@@ -142,7 +151,7 @@ namespace Spine.DI {
 			}
 		}
 
-		public void InjectInto<T>(T target) {
+		public void Inject<T>(T target) {
 			var injectionPoints = TypeDescriber.GetInjectionPoints( typeof(T) );
 
 			foreach (var injection in injectionPoints) {

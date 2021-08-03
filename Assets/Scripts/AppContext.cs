@@ -18,11 +18,11 @@ public static class AppContext {
 
 	public static void Mediate(object view) {
 		Log( $"Mediate: {view}" );
-		current.injector.InjectInto( view );
+		current.injector.Inject( view );
 	}
 	
 	public static void Release(object view) {
-		Log( $"Mediate: {view}" );
+		Log( $"Release: {view}" );
 		current.injector.Clear( view );
 	}
 }
