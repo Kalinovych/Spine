@@ -14,7 +14,6 @@ public class MenuButtonMediator : Mediator {
 	}
 
 	void OnEnable() {
-		print( $"OnEnable, eventHub: {eventHub}" );
 		button.onClick.AddListener( OnClick );
 	}
 
