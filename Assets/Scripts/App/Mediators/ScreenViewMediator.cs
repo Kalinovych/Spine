@@ -12,6 +12,7 @@ public class ScreenViewMediator : Mediator {
 	readonly Color[] colors = { Color.black, Color.white, Color.red, Color.green, Color.blue, };
 
 	void UpdateView() {
+		print( $"[{nameof(ScreenViewMediator)}] UpdateView() > menuModel.ScreenIndex: {menuModel.ScreenIndex}" );
 		var material = screenMesh.material;
 		material.color = colors[menuModel.ScreenIndex];
 	}
@@ -22,7 +23,7 @@ public class ScreenViewMediator : Mediator {
 
 	void OnMenuItemSelect(MenuEvent _) => UpdateView();
 
-	protected override void OnPreDestroy() {
+	protected override void OnDestroying() {
 		OffEvent<MenuEvent>( OnMenuItemSelect );
 	}
 

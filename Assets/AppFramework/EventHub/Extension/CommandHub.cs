@@ -21,6 +21,12 @@ namespace Spine.Signals {
 			var ce = new CommandExecutor<TCmd>( injector );
 			eventHub.On<T>( signal => ce.Execute( signal ) );
 		}
+		
+		public void To<TCmd>() where TCmd : struct, ICommand {
+			var ce = new CommandExecutor<TCmd>( injector );
+			//eventHub.On<T>( signal => ce.Execute( signal ) );
+			eventHub.On<T>( ce.Execute );
+		}
 	}
 
 	readonly struct CommandExecutor<TCommand> where TCommand : struct, ICommand{
@@ -32,7 +38,7 @@ namespace Spine.Signals {
 
 		public void Execute<TSignal>(TSignal signal) {
 			// create
-			TCommand cmd = injector.With( signal ).Create<TCommand>();
+			TCommand cmd = injector.With( signal ).Resolve<TCommand>();
 			// execute
 			cmd.Execute();
 		}

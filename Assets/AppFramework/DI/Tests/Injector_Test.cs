@@ -145,7 +145,7 @@ public class Injector_Test {
 
 		injector.AutoMap( subject );
 
-		var client = injector.InjectIn<StructInjectionClient>();
+		var client = injector.Resolve<StructInjectionClient>();
 
 		Assert.AreEqual( subject, client.subject );
 	}
@@ -157,7 +157,7 @@ public class Injector_Test {
 		injector.AutoMap( subject );
 
 		var target = new StructInjectionClient();
-		injector.InjectIn( ref target );
+		injector.Resolve( ref target );
 
 		Assert.AreEqual( subject, target.subject );
 	}

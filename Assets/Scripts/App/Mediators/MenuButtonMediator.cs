@@ -19,7 +19,7 @@ public class MenuButtonMediator : Mediator {
 	}
 
 	void OnClick() {
-		Emit( new MenuItemSelect( menuItemIndex ) );
+		Send( new MenuItemSelect( menuItemIndex ) );
 	}
 }
 

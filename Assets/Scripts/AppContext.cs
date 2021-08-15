@@ -29,9 +29,9 @@ public static class AppContext {
 	struct AppBundle : IContextExtension {
 		public void Extend(Context context) {
 			var injector = context.injector;
-			injector.One<EventHub>();
-			injector.One<MediatorHub>();
-			injector.One<CommandHub>();
+			injector.MapSingleton<EventHub>();
+			injector.MapSingleton<MediatorHub>();
+			injector.MapSingleton<CommandHub>();
 		}
 	}
 }

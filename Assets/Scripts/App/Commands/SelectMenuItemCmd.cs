@@ -1,4 +1,5 @@
-﻿using Spine.DI;
+﻿using System;
+using Spine.DI;
 using Spine.Signals;
 using UnityEngine.SceneManagement;
 
@@ -6,7 +7,7 @@ namespace App.Commands {
 	public struct SelectMenuItemCmd : ICommand {
 		[Inject]
 		MenuItemSelect selectEvent;
-		
+
 		[Inject]
 		MenuModel menuModel;
 

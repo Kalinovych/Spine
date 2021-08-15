@@ -1,5 +1,6 @@
 ﻿using App;
 using App.Commands;
+using App.Requests;
 using App.Utils;
 using Spine.Signals;
 using Spine;
@@ -28,18 +29,22 @@ readonly struct ContextConfig : IContextConfig {
 			return null;
 		});
 		
-		injector.One<MenuModel>();
-		injector.One<LogAction>( Debug.Log );
+		injector.MapSingleton<MenuModel>();
+		injector.MapSingleton<LogAction>( Debug.Log );
 
 		On<LaunchEvent>().Do<StartupCmd>();
-		On<OpenSceneRequest>().Do<LoadSceneCmd>();
 		On<MenuItemSelect>().Do<SelectMenuItemCmd>();
-		On<LaunchEvent>().Do<LoadAdditional>();
+		//On<OpenSceneRequest>().Do<LoadSceneCmd>();
+		//On<LaunchEvent>().Do<LoadAdditional>();
 		
-		eventHub.Emit( new LaunchEvent() );
+		Map<OpenScreenRequest>().To<OpenScreenCommand>();
+		Map<CloseScreenRequest>().To<CloseScreenCommand>();
+		
+		eventHub.Send( new LaunchEvent() );
 	}
 
 	EventMapper<T> On<T>() => commandHub.On<T>();
+	EventMapper<T> Map<T>() => commandHub.On<T>();
 }
 
 #region Helpers

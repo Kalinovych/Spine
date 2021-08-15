@@ -24,16 +24,16 @@ namespace Spine {
 			return this;
 		}
 
-		public Context Configure<T>() where T : struct, IContextConfig {
-			Log( $"Configure<{typeof(T)}>" );
-			configurator.Add( () => injector.InjectIn<T>().Configure() );
+		public Context Configure<TContextConfig>() where TContextConfig : struct, IContextConfig {
+			Log( $"Configure<{typeof(TContextConfig)}>" );
+			configurator.Add( () => injector.Resolve<TContextConfig>().Configure() );
 			return this;
 		}
 
 		public Context Initialize() {
 			Log( "Initialize" );
-			injector.One( this );
-			injector.One( injector );
+			injector.MapSingleton( this );
+			injector.MapSingleton( injector );
 			installer.Execute();
 			configurator.Execute();
 			return this;

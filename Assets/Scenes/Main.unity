@@ -285,6 +285,49 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 130985148}
   m_CullTransparentMesh: 1
+--- !u!1 &360912145
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 360912146}
+  - component: {fileID: 360912147}
+  m_Layer: 0
+  m_Name: V3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &360912146
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 360912145}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &360912147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 360912145}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a4fb3ec69624616b63f7e5fd1aa9719, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &364733878
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -570,7 +613,7 @@ GameObject:
   - component: {fileID: 1063615343}
   - component: {fileID: 1063615346}
   m_Layer: 5
-  m_Name: Button
+  m_Name: Open Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -639,7 +682,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1063615344}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1063615346}
+        m_TargetAssemblyTypeName: OpenButtonMediator, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1063615344
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -687,10 +742,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1063615341}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 219bb5e1233f45889b55b9d802f88466, type: 3}
+  m_Script: {fileID: 11500000, guid: 1b8aebd319e44c94e98193454db025ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  menuItemIndex: 0
 --- !u!1 &1094165688
 GameObject:
   m_ObjectHideFlags: 0
@@ -1369,7 +1423,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Button
+  m_Text: Open
 --- !u!222 &1475978732
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1623,7 +1677,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Button
+  m_Text: Close
 --- !u!222 &1941773228
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1715,7 +1769,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1976539578}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1976539580}
+        m_TargetAssemblyTypeName: App.Mediators.CloseButtonMediator, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1976539578
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1763,7 +1829,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 1976539575}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 219bb5e1233f45889b55b9d802f88466, type: 3}
+  m_Script: {fileID: 11500000, guid: 2c36757fa9954bf39f2ceabe6c91132b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  menuItemIndex: 4

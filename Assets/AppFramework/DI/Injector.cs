@@ -41,19 +41,18 @@ namespace Spine.DI {
 			}
 		}
 		
-		public void One<T>() where T : new() {
+		public void MapSingleton<T>() where T : new() {
 			Map<T>( target => {
 				var result = repository.Retrieve( typeof(T) );
 				if (result == null) {
-					result = new T();
-					InjectIn( result );
+					result = Resolve<T>();
 					repository.Put( typeof(T), result );
 				}
 				return result;
 			});
 		}
 
-		public void One<T>(T instance) {
+		public void MapSingleton<T>(T instance) {
 			mappings.Add( typeof(T), target => instance );
 		}
 
@@ -63,8 +62,8 @@ namespace Spine.DI {
 
 		public void Unmap<T>() => mappings.Remove( typeof(T) );
 
-		public T InjectIn<T>() where T : struct {
-			object targetBoxed = default(T);
+		public T Resolve<T>() where T : new() {
+			object targetBoxed = new T();
 
 			InjectIn( targetBoxed );
 
@@ -84,7 +83,7 @@ namespace Spine.DI {
 				this.value = value;
 			}
 
-			public T Create<T>() where T : struct {
+			public T Resolve<T>() where T : struct {
 				object target = default(T);
 
 				var injectionPoints = TypeDescriber.GetInjectionPoints( target.GetType() );
@@ -113,7 +112,7 @@ namespace Spine.DI {
 			}
 		}
 
-		public void InjectIn<T>(ref T target) where T : struct {
+		public void Resolve<T>(ref T target) where T : struct {
 			object targetBoxed = target;
 
 			InjectIn( targetBoxed );
@@ -152,25 +151,6 @@ namespace Spine.DI {
 			var injectionPoints = TypeDescriber.GetInjectionPoints( target.GetType() );
 			foreach (var injection in injectionPoints) {
 				injection.ApplyTo( target, null );
-			}
-		}
-
-		public void InjectIn<T>(T target) {
-			var injectionPoints = TypeDescriber.GetInjectionPoints( typeof(T) );
-
-			foreach (var injection in injectionPoints) {
-				var dependency = repository.Retrieve( injection.TargetType );
-
-				if (dependency is null && mappings.TryGetValue( injection.TargetType, out var provider )) {
-					dependency = provider(target);
-				}
-
-				if (dependency == null && injection.isRequired) {
-					Debug.LogError( $">> \t{injection.Name} = <i>[missing required reference]</i>({injection.TargetType.Name})" );
-					continue;
-				}
-
-				injection.ApplyTo( target, dependency );
 			}
 		}
 	}

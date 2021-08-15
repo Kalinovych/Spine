@@ -6,6 +6,6 @@ namespace Spine {
 		[Inject]
 		protected readonly EventHub eventHub;
 
-		protected void Emit<T>(T eventSignal) => eventHub.Emit( eventSignal );
+		protected void Emit<T>(T eventSignal) => eventHub.Send( eventSignal );
 	}
 }

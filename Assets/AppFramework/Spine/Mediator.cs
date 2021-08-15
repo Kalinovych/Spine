@@ -8,7 +8,7 @@ namespace Spine {
 		[Inject]
 		protected readonly EventHub eventHub;
 
-		protected void Emit<T>(T eventSignal) => eventHub.Emit( eventSignal );
+		protected void Send<T>(T eventSignal) => eventHub.Send( eventSignal );
 		protected void OnEvent<T>(Action<T> callback) => eventHub.On( callback );
 		protected void OffEvent<T>(Action<T> callback) => eventHub.Off( callback );
 
@@ -21,10 +21,10 @@ namespace Spine {
 		}
 
 		protected virtual void OnInitialized() {}
-		protected virtual void OnPreDestroy() {}
+		protected virtual void OnDestroying() {}
 
 		protected virtual void OnDestroy() {
-			OnPreDestroy();
+			OnDestroying();
 			AppContext.Release( this );
 		}
 	}

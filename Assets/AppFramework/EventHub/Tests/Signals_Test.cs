@@ -32,8 +32,8 @@ public class Signals_Test
 	[Test]
 	public void BroadcastDataStructPasses()
 	{
-		_eventHub.Emit( new TestSignal() );
-		_eventHub.Emit( new TestSignal2() );
+		_eventHub.Send( new TestSignal() );
+		_eventHub.Send( new TestSignal2() );
 	}
 
 	[Test]
@@ -44,7 +44,7 @@ public class Signals_Test
 			Assert.Pass();
 		} );
 
-		_eventHub.Emit( new TestSignal() );
+		_eventHub.Send( new TestSignal() );
 
 		Assert.Fail();
 	}
@@ -68,7 +68,7 @@ public class Signals_Test
 			Assert.Pass();
 		} );
 
-		_eventHub.Emit( new TestSignal() );
+		_eventHub.Send( new TestSignal() );
 
 		Assert.Fail();
 	}
@@ -87,7 +87,7 @@ public class Signals_Test
 			Assert.Pass();
 		} );
 
-		_eventHub.Emit( new TestSignal() );
+		_eventHub.Send( new TestSignal() );
 
 		Assert.Fail();
 	}
@@ -103,9 +103,9 @@ public class Signals_Test
 				Assert.Fail( "Signal received more than once" );
 		} );
 
-		_eventHub.Emit( new TestSignal() );
-		_eventHub.Emit( new TestSignal() );
-		_eventHub.Emit( new TestSignal() );
+		_eventHub.Send( new TestSignal() );
+		_eventHub.Send( new TestSignal() );
+		_eventHub.Send( new TestSignal() );
 	}
 
 	void TestSignal_FailHandler(TestSignal signal)
@@ -124,8 +124,8 @@ public class Signals_Test
 		_eventHub.On<TestSignal>( TestSignal_FailHandler );
 		_eventHub.Off<TestSignal>( TestSignal_FailHandler );
 
-		_eventHub.Emit( new TestSignal() );
-		_eventHub.Emit( new TestSignal() );
+		_eventHub.Send( new TestSignal() );
+		_eventHub.Send( new TestSignal() );
 	}
 
 	[Test]
@@ -136,16 +136,16 @@ public class Signals_Test
 
 		_eventHub.OffAll();
 
-		_eventHub.Emit( new TestSignal() );
-		_eventHub.Emit( new TestSignal2() );
+		_eventHub.Send( new TestSignal() );
+		_eventHub.Send( new TestSignal2() );
 	}
 
 	[Test]
 	public void RemoveFromHandlerPasses()
 	{
 		_eventHub.On<TestSignal>( RemoveSelfHandler );
-		_eventHub.Emit( new TestSignal() );
-		_eventHub.Emit( new TestSignal() );
+		_eventHub.Send( new TestSignal() );
+		_eventHub.Send( new TestSignal() );
 	}
 
 	private void RemoveSelfHandler(TestSignal signal)
@@ -176,7 +176,7 @@ public class Signals_Test
 		const int runCount = 1000 * 1000;
 		for (var i = 0; i < runCount; i++)
 		{
-			_eventHub.Emit( new TestSignal() );
+			_eventHub.Send( new TestSignal() );
 			//signalHub.Send(new TestSignal2());
 		}
 

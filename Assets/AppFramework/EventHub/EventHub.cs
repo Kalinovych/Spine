@@ -26,7 +26,7 @@ namespace Spine.Signals {
 			channelMap.Clear();
 		}
 
-		public void Emit<T>(T signal) {
+		public void Send<T>(T signal) {
 			channelMap.GetChannel<T>()?.Emit( signal );
 		}
 
