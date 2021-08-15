@@ -6,6 +6,8 @@ namespace Spine.Signals {
 		[Inject] EventHub eventHub;
 		
 		public EventMapper<T> On<T>() => new EventMapper<T>( injector, eventHub );
+		
+		public EventMapper<T> Map<T>() => new EventMapper<T>( injector, eventHub );
 	}
 	
 	public readonly struct EventMapper<T> {

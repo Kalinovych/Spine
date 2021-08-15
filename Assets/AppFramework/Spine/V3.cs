@@ -11,12 +11,30 @@ namespace Spine {
 		public void Run() {
 			
 			/***
-			 * Map<Startup>().To<LoadStartupPageCmd>(); // triggers LoadPage with default page url
+			 * Map<GalleryModel>();
 			 * Map<LoadURL>().To<LoadURLCommand>(); // triggers page service to load requested url
 			 * Map<IPageService>().To<HttpJsonService>(); // has some result of work
 			 * Map<PageLoadingResult>().To<HandleLoadedPage>();
 			 * 
 			 * Send(new LoadURL("/home"));
+			 *
+			 *	class GalleryModel {
+			 *  }
+			 * 
+			 * 
+			 * struct LoadURLCommand {
+			 *		IPageService service;
+			 *		Execute(LoadURL request) {
+			 *			service.LoadAsync(request.url);
+			 *		}
+			 * }
+			 *
+			 * struct JsonPageHandler {
+			 *		
+			 *		void Handle(string json) {
+			 *			
+			 *		}
+			 * }
 			 */
 			
 			/***
