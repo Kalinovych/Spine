@@ -22,28 +22,36 @@ readonly struct ContextConfig : IContextConfig {
 	readonly CommandHub commandHub;
 
 	public void Configure() {
+		// GO's component find & inject
+		injector.Map<Button>( component => {
+			if (component is MonoBehaviour c)
+				return c.GetComponent<Button>();
+			return null;
+		} );
+		
+		ConfigureGallery();
+	}
+
+	void ConfigureGallery() {
 		injector.Map<GalleryView>( component => {
 			if (component is MonoBehaviour c)
 				return c.GetComponent<GalleryView>();
 			return null;
 		} );
-		
-		commandHub.Map<LaunchEvent>().To<LoadDemoGallery>();
+
+		Map<OpenDemoGallery>().To<LoadDemoGalleryCommand>();
+		Map<OpenGallery>().To<OpenGalleryCommand>();
+		Map<MenuItemSelect>().To<SelectMenuItemCmd>();
+		Map<ClearGallery>().To<ClearGalleryCommand>();
 
 		injector.MapSingleton<GalleryModel>();
+		injector.MapSingleton<MenuModel>();
 
 		// find a better place to send it
 		eventHub.Send( new LaunchEvent() );
 	}
 
 	public void ConfigureOld() {
-		// GO's component find & inject
-		injector.Map<Button>( component => {
-			if (component is MonoBehaviour c)
-				return c.GetComponent<Button>( );
-			return null;
-		});
-
 		injector.MapSingleton<MenuModel>();
 		injector.MapSingleton<LogAction>( Debug.Log );
 

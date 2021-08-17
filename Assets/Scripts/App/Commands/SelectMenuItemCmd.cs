@@ -1,7 +1,6 @@
-﻿using System;
-using Spine.DI;
+﻿using Spine.DI;
 using Spine.Signals;
-using UnityEngine.SceneManagement;
+using UnityEngine;
 
 namespace App.Commands {
 	public struct SelectMenuItemCmd : ICommand {
@@ -11,15 +10,9 @@ namespace App.Commands {
 		[Inject]
 		MenuModel menuModel;
 
-		[Inject]
-		LogAction Log;
-
 		public void Execute() {
-			Log( $"SelectMenuItemCmd: {selectEvent.index}" );
-			menuModel.ScreenIndex = selectEvent.index;
-
-			if (menuModel.ScreenIndex == 4 && SceneManager.GetSceneByName( "Additional" ).isLoaded)
-				SceneManager.UnloadSceneAsync( "Additional" );
+			Debug.Log( $"SelectMenuItemCmd: {selectEvent.index}" );
+			menuModel.ScreenIndex = selectEvent.index + 1;
 		}
 	}
 }

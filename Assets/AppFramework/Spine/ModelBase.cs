@@ -2,10 +2,10 @@
 using Spine.Signals;
 
 namespace Spine {
-	public class Model {
+	public class ModelBase {
 		[Inject]
 		protected readonly EventHub eventHub;
 
-		protected void Emit<T>(T eventSignal) => eventHub.Send( eventSignal );
+		protected void Send<T>(T eventSignal) => eventHub.Send( eventSignal );
 	}
 }

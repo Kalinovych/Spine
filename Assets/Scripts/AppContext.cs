@@ -16,11 +16,17 @@ public static class AppContext {
 			.Initialize();
 	}
 
-	public static void Inject(object target) {
+	/**
+	 * Resolves target object dependencies
+	 */
+	public static void Resolve(object target) {
 		Log( $"Inject: {target}" );
 		Current.injector.InjectIn( target );
 	}
-	
+
+	/**
+	 * Clear references to dependencies
+	 */
 	public static void Release(object target) {
 		Log( $"Release: {target}" );
 		Current.injector.Clear( target );

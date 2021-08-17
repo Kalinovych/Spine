@@ -18,13 +18,13 @@ public class ScreenViewMediator : Mediator {
 	}
 
 	protected override void OnInitialized() {
-		OnEvent<MenuEvent>( OnMenuItemSelect );
+		OnEvent<MenuModel.ScreenChanged>( OnMenuItemSelect );
 	}
 
-	void OnMenuItemSelect(MenuEvent _) => UpdateView();
+	void OnMenuItemSelect(MenuModel.ScreenChanged _) => UpdateView();
 
 	protected override void OnDestroying() {
-		OffEvent<MenuEvent>( OnMenuItemSelect );
+		OffEvent<MenuModel.ScreenChanged>( OnMenuItemSelect );
 	}
 
 	void OnEnable() {

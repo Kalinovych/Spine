@@ -3,11 +3,14 @@ using Spine.Signals;
 using UnityEngine;
 
 namespace App {
-	public struct LoadDemoGallery : ICommand {
+	public struct LoadDemoGalleryCommand : ICommand {
 		[Inject] GalleryModel model;
 
+		[Inject] EventHub eventHub;
+
 		public void Execute() {
-			model.gallery = DemoGalleryProvider();
+			model.SetGallery( DemoGalleryProvider() );
+			eventHub.Send( new OpenGallery( DemoGalleryProvider() ) );
 		}
 
 		Gallery DemoGalleryProvider() {

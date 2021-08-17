@@ -10,11 +10,8 @@ public class MenuButtonMediator : Mediator {
 	[Inject]
 	Button button;
 
-	protected override void OnInitialized() {
-		//button = GetComponent<Button>();
-	}
-
-	void OnEnable() {
+	void Start() {
+		button = GetComponent<Button>();
 		button.onClick.AddListener( OnClick );
 	}
 

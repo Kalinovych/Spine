@@ -15,7 +15,8 @@ namespace Spine {
 		protected virtual void Awake() {
 			print( "Mediator.Awake" );
 		
-			AppContext.Inject( this );
+			// TODO: resolve this shit!
+			AppContext.Resolve( this );
 
 			OnInitialized();
 		}
@@ -25,6 +26,8 @@ namespace Spine {
 
 		protected virtual void OnDestroy() {
 			OnDestroying();
+
+			// TODO: resolve this shit!
 			AppContext.Release( this );
 		}
 	}

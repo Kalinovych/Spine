@@ -5,12 +5,22 @@ using UnityEngine;
 public class GalleryView : MonoBehaviour {
 	public GalleryItemView GalleryItemPrefab;
 
-	public int MaxCols = 1;
-	public float ItemWidth = 1f;
-	public float ItemHeight = 1f;
-	public float ItemSpacing = 0f;
+	[SerializeField] int maxCols = 1;
+	[SerializeField] float itemWidth = 1f;
+	[SerializeField] float itemHeight = 1f;
+	[SerializeField] float itemSpacing = 0f;
 
 	GalleryItemView[] views = Array.Empty<GalleryItemView>();
+
+	public int MaxCols {
+		get => maxCols;
+		set {
+			if (value != maxCols) {
+				maxCols = value;
+				LayoutItems();
+			}
+		}
+	}
 
 	public void SetGallery(Gallery gallery) {
 		foreach (var view in views) {
@@ -28,15 +38,15 @@ public class GalleryView : MonoBehaviour {
 		LayoutItems();
 	}
 
-	void LayoutItems() {
+	public void LayoutItems() {
 		var viewCount = views.Length;
-		var leftOrigin = -(MaxCols - 1) * (ItemWidth + ItemSpacing) * 0.5f;
+		var leftOrigin = -(MaxCols - 1) * (itemWidth + itemSpacing) * 0.5f;
 		for (int i = 0; i < viewCount; i++) {
 			var col = i % MaxCols;
 			var row = (int)i / MaxCols;
-			var left = col * (ItemWidth + ItemSpacing);
+			var left = col * (itemWidth + itemSpacing);
 
-			views[i].transform.localPosition = new Vector3( leftOrigin + left, -(ItemHeight + ItemSpacing) * row, 0f );
+			views[i].transform.localPosition = new Vector3( leftOrigin + left, -(itemHeight + itemSpacing) * row, 0f );
 		}
 	}
 

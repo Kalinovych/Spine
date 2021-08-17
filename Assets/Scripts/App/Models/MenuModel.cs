@@ -1,7 +1,7 @@
 ﻿using Spine;
 
 namespace App {
-	public class MenuModel : Model {
+	public class MenuModel : ModelBase {
 		int screenIndex;
 
 		public int ScreenIndex {
@@ -11,16 +11,16 @@ namespace App {
 				
 				screenIndex = value;
 				
-				Emit( new MenuEvent( screenIndex ) );
+				Send( new ScreenChanged( screenIndex ) );
 			}
 		}
-	}
 
-	public readonly struct MenuEvent {
-		public readonly int itemIndex;
+		public readonly struct ScreenChanged {
+			public readonly int itemIndex;
 
-		public MenuEvent(int itemIndex) {
-			this.itemIndex = itemIndex;
+			public ScreenChanged(int itemIndex) {
+				this.itemIndex = itemIndex;
+			}
 		}
 	}
 }
