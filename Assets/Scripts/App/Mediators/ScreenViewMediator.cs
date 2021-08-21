@@ -1,4 +1,4 @@
-using App;
+using App.Models;
 using Spine;
 using Spine.DI;
 using UnityEngine;

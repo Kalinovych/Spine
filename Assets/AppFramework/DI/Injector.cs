@@ -62,6 +62,10 @@ namespace Spine.DI {
 
 		public void Unmap<T>() => mappings.Remove( typeof(T) );
 
+		public T Retrieve<T>() {
+			
+		}
+
 		public T Resolve<T>() where T : new() {
 			object targetBoxed = new T();
 

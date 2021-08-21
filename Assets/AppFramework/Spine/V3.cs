@@ -2,7 +2,7 @@
 using Spine.Signals;
 using UnityEngine;
 
-namespace Spine {
+namespace Spine.Experiments {
 	// --- //
 
 	class V3Program {

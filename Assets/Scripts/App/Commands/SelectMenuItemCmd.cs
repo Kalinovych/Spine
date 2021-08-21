@@ -1,9 +1,11 @@
-﻿using Spine.DI;
+﻿using App.Models;
+using Spine;
+using Spine.DI;
 using Spine.Signals;
 using UnityEngine;
 
 namespace App.Commands {
-	public struct SelectMenuItemCmd : ICommand {
+    public struct SelectMenuItemCmd : ICommand {
 		[Inject]
 		MenuItemSelect selectEvent;
 

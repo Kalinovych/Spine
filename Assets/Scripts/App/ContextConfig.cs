@@ -7,6 +7,7 @@ using Spine;
 using Spine.DI;
 using UnityEngine;
 using UnityEngine.UI;
+using App.Models;
 
 readonly struct ContextConfig : IContextConfig {
 	[Inject]
@@ -39,10 +40,10 @@ readonly struct ContextConfig : IContextConfig {
 			return null;
 		} );
 
-		Map<OpenDemoGallery>().To<LoadDemoGalleryCommand>();
-		Map<OpenGallery>().To<OpenGalleryCommand>();
-		Map<MenuItemSelect>().To<SelectMenuItemCmd>();
-		Map<ClearGallery>().To<ClearGalleryCommand>();
+		Map<OpenDemoGallery, LoadDemoGalleryCommand>();
+		Map<OpenGallery, OpenGalleryCommand>();
+		Map<MenuItemSelect, SelectMenuItemCmd>();
+		Map<ClearGallery, ClearGalleryCommand>();
 
 		injector.MapSingleton<GalleryModel>();
 		injector.MapSingleton<MenuModel>();
@@ -68,6 +69,7 @@ readonly struct ContextConfig : IContextConfig {
 
 	EventMapper<T> On<T>() => commandHub.On<T>();
 	EventMapper<T> Map<T>() => commandHub.On<T>();
+	void Map<TRequest, TCommand>() where TCommand: struct, ICommand => commandHub.On<TRequest>().Do<TCommand>();
 }
 
 #region Helpers

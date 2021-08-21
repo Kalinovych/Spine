@@ -22,6 +22,7 @@ class BootstrapOnLoad {
 
 public class AppContextBehaviour : MonoBehaviour {
 	void Awake() {
+		DontDestroyOnLoad(gameObject);
 	}
 
 	void Start() {

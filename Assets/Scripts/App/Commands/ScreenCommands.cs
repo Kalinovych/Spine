@@ -1,4 +1,5 @@
-﻿using Spine.Signals;
+﻿using Spine;
+using Spine.Signals;
 using UnityEngine.SceneManagement;
 
 namespace App.Commands {

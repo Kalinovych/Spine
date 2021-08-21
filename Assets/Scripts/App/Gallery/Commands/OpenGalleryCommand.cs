@@ -1,5 +1,5 @@
-﻿using Spine.DI;
-using Spine.Signals;
+﻿using Spine;
+using Spine.DI;
 
 namespace App {
 	public struct OpenGalleryCommand : ICommand {
