@@ -27,10 +27,10 @@ namespace Spine.DI {
 	public class Injector {
 		readonly DependencyRepository repository = new DependencyRepository();
 
-		public delegate object DependencyProvider(object target);
-		
-		readonly Dictionary<Type, DependencyProvider> mappings = new Dictionary<Type, DependencyProvider>();
-		
+		public delegate object DependencyProviderDelegate(object target);
+
+		readonly Dictionary<Type, DependencyProviderDelegate> mappings = new Dictionary<Type, DependencyProviderDelegate>();
+
 		/// <summary>
 		/// Maps dependency by it's Type
 		/// </summary>
@@ -40,7 +40,7 @@ namespace Spine.DI {
 				repository.Put( item.GetType(), item );
 			}
 		}
-		
+
 		public void MapSingleton<T>() where T : new() {
 			Map<T>( target => {
 				var result = repository.Retrieve( typeof(T) );
@@ -48,30 +48,110 @@ namespace Spine.DI {
 					result = Resolve<T>();
 					repository.Put( typeof(T), result );
 				}
+
 				return result;
-			});
+			} );
 		}
 
 		public void MapSingleton<T>(T instance) {
 			mappings.Add( typeof(T), target => instance );
 		}
 
-		public void Map<T>(DependencyProvider provider) {
+		public void Map<T>(DependencyProviderDelegate provider) {
 			mappings.Add( typeof(T), provider );
 		}
 
-		public void Unmap<T>() => mappings.Remove( typeof(T) );
-
 		public T Retrieve<T>() {
+			if (providers.TryGetValue( typeof(T), out var dependencyProvider )) {
+				return (T)dependencyProvider.Get();
+			}
 			
+			if (mappings.TryGetValue( typeof(T), out var dependencyProviderAction )) {
+				return (T)dependencyProviderAction( null );
+			}
+
+			return default;
+		}
+
+		// V3 //
+		interface IDependencyProvider {
+			object Get();
+		}
+
+		readonly struct InstanceProvider<TDependency> : IDependencyProvider {
+			readonly TDependency dependency;
+
+			public InstanceProvider(TDependency dependency) {
+				this.dependency = dependency;
+			}
+
+			public object Get() {
+				return dependency;
+			}
+		}
+		
+		struct SingletonProvider<TDependency> : IDependencyProvider where TDependency : new() {
+			TDependency instance;
+
+			public object Get() {
+				if (instance is null) {
+					instance = new TDependency();
+				}
+				return instance;
+			}
+		}
+
+		readonly Dictionary<Type, IDependencyProvider> providers = new Dictionary<Type, IDependencyProvider>();
+
+		public void Add<TDependency>(TDependency dependency) {
+			providers.Add( typeof(TDependency), new InstanceProvider<TDependency>( dependency ) );
+		}
+
+		public void Add<TDependency, TImplementation>() where TImplementation : TDependency, new() {
+			providers.Add( typeof(TDependency), new SingletonProvider<TImplementation>() );
+		}
+
+		public void Add<TDependency>() where TDependency : new() {
+			Add<TDependency, TDependency>();
+		}
+
+		/// <summary>
+		/// Resolve target dependencies marked with Inject Attribute
+		/// </summary>
+		/// <param name="target"></param>
+		public void Resolve(object target) {
+			Debug.Log( $"InjectIn: {target}" );
+
+			var injectionPoints = TypeDescriber.GetInjectionPoints( target.GetType() );
+
+			foreach (var injection in injectionPoints) {
+				Debug.Log( $"\tpoint: {injection.Name} : {injection.TargetType}" );
+				var dependency = repository.Retrieve( injection.TargetType );
+
+				if (dependency == null && mappings.TryGetValue( injection.TargetType, out var providerAction )) {
+					dependency = providerAction( target );
+				}
+
+				if (dependency == null && providers.TryGetValue( injection.TargetType, out var provider )) {
+					dependency = provider.Get();
+				}
+
+				if (dependency == null && injection.isRequired) {
+					Debug.LogError( $">> \t{injection.Name} = <i>[missing required reference]</i>({injection.TargetType.Name})" );
+					continue;
+				}
+
+				Debug.Log( $"\tinject: {target} ← {dependency}" );
+				injection.ApplyTo( target, dependency );
+			}
 		}
 
 		public T Resolve<T>() where T : new() {
 			object targetBoxed = new T();
 
-			InjectIn( targetBoxed );
+			Resolve( targetBoxed );
 
-			return (T) targetBoxed;
+			return (T)targetBoxed;
 		}
 
 		public Injection<T> With<T>(T dependency) {
@@ -101,7 +181,7 @@ namespace Spine.DI {
 					}
 
 					if (dependency == null && injector.mappings.TryGetValue( injection.TargetType, out var provider )) {
-						dependency = provider(target);
+						dependency = provider( target );
 					}
 
 					if (dependency == null && injection.isRequired) {
@@ -112,43 +192,16 @@ namespace Spine.DI {
 					injection.ApplyTo( target, dependency );
 				}
 
-				return (T) target;
+				return (T)target;
 			}
 		}
 
 		public void Resolve<T>(ref T target) where T : struct {
 			object targetBoxed = target;
 
-			InjectIn( targetBoxed );
+			Resolve( targetBoxed );
 
-			target = (T) targetBoxed;
-		}
-
-		/// <summary>
-		/// Fulfill target's injection requirements
-		/// </summary>
-		/// <param name="target"></param>
-		public void InjectIn(object target) {
-			Debug.Log( $"InjectIn: {target}" );
-			
-			var injectionPoints = TypeDescriber.GetInjectionPoints( target.GetType() );
-
-			foreach (var injection in injectionPoints) {
-				Debug.Log( $"\tpoint: {injection.Name} : {injection.TargetType}" );
-				var dependency = repository.Retrieve( injection.TargetType );
-				
-				if (dependency == null && mappings.TryGetValue( injection.TargetType, out var provider )) {
-					dependency = provider(target);
-				}
-
-				if (dependency == null && injection.isRequired) {
-					Debug.LogError( $">> \t{injection.Name} = <i>[missing required reference]</i>({injection.TargetType.Name})" );
-					continue;
-				}
-
-				Debug.Log( $"\tinject: {target} ← {dependency}" );
-				injection.ApplyTo( target, dependency );
-			}
+			target = (T)targetBoxed;
 		}
 
 		public void Clear(object target) {
@@ -191,7 +244,7 @@ namespace Spine.DI {
 		public static void Example(Type targetType) {
 			ICollection<IInjectionPoint> FieldDescriber(Type type) {
 				Debug.Log( $">> {nameof(FieldDescriber)} exec" );
-				return new List<IInjectionPoint>() {new FieldInjectionPoint()};
+				return new List<IInjectionPoint>() { new FieldInjectionPoint() };
 			}
 
 			ICollection<IInjectionPoint> SetterDescriber(Type type) {
@@ -230,7 +283,7 @@ namespace Spine.DI {
 			var result = new List<IInjectionPoint>();
 			var members = targetType.GetMembers( BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance );
 			foreach (var member in members) {
-				var attribute = (InjectAttribute) Attribute.GetCustomAttribute( member, typeof(InjectAttribute), true );
+				var attribute = (InjectAttribute)Attribute.GetCustomAttribute( member, typeof(InjectAttribute), true );
 				if (attribute != null) {
 					var isRequired = !attribute.isOptional;
 					switch (member) {
@@ -251,7 +304,7 @@ namespace Spine.DI {
 			var result = new List<IInjectionPoint>();
 			var fields = targetType.GetFields( BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance );
 			foreach (var field in fields) {
-				var attribute = (InjectAttribute) Attribute.GetCustomAttribute( field, typeof(InjectAttribute), true );
+				var attribute = (InjectAttribute)Attribute.GetCustomAttribute( field, typeof(InjectAttribute), true );
 				if (attribute != null)
 					result.Add( new FieldInjectionPoint( field, true ) );
 			}
@@ -264,7 +317,7 @@ namespace Spine.DI {
 			var properties = targetType.GetProperties( BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance );
 			foreach (var property in properties) {
 				if (property.CanWrite) {
-					var attribute = (InjectAttribute) Attribute.GetCustomAttribute( property, typeof(InjectAttribute), true );
+					var attribute = (InjectAttribute)Attribute.GetCustomAttribute( property, typeof(InjectAttribute), true );
 					if (attribute != null)
 						result.Add( new PropertyInjectionPoint( property, !attribute.isOptional ) );
 				}

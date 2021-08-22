@@ -14,30 +14,49 @@ namespace Spine.Experiments {
 				.InstallCommandHub()
 				.With<CalculatorAppContextConfig>()
 				.Initialize()
-				.Send( new CalculationRequest() );
-		}
-	}
-
-	static class CalculatorExtension {
-		public static void Calculate(this Context context) {
-			context.injector.Resolve<EventHub>().Send( new CalculationRequest() );
+				.Send( new CalculationRequest( 2 ) );
 		}
 	}
 
 	struct CalculatorAppContextConfig : IContextConfig {
 		[Inject] CommandHub commandHub;
+		[Inject] Injector injector;
 
 		public void Configure() {
 			commandHub.Map<CalculationRequest, CalculateCommand>();
+
+			injector.MapSingleton<ICalculationService>(new CalculationService());
+			
+			injector.Add<ICalculationService, CalculationService>();
 		}
 	}
 
-	struct CalculationRequest {
+	readonly struct CalculationRequest {
+		public readonly float value;
+
+		public CalculationRequest(float value) {
+			this.value = value;
+		}
 	}
 
 	struct CalculateCommand : ICommand<CalculationRequest> {
+		[Inject] ICalculationService service;
+
 		public void Execute(CalculationRequest request) {
-			Debug.Log( $"CalculateCommand.Execute: {request}" );
+			Debug.Log( $"CalculateCommand.Execute: {request.value} -> {service.Calculate( request )}" );
+		}
+	}
+
+
+	interface ICalculationService {
+		float Calculate(CalculationRequest request);
+	}
+
+	struct CalculationService : ICalculationService {
+		const float rate = 2f;
+
+		public float Calculate(CalculationRequest request) {
+			return request.value * rate;
 		}
 	}
 }

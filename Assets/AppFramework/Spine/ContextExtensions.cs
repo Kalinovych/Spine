@@ -10,5 +10,16 @@ namespace Spine {
 			context.injector.MapSingleton<EventHub>();
 			return context;
 		}
+
+
+		public static Context Send<T>(this Context context, T signal) {
+			context.injector.Retrieve<EventHub>().Send( signal );
+
+			/***
+			 * 
+			 */
+
+			return context;
+		}
 	}
 }

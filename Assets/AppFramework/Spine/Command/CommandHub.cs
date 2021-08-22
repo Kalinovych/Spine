@@ -78,9 +78,5 @@ namespace Spine {
 			context.injector.MapSingleton<CommandHub>();
 			return context;
 		}
-
-		public static Context Send<T>(this Context context, T signal) {
-			return context;
-		}
 	}
 }
