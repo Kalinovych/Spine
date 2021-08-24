@@ -40,6 +40,7 @@ readonly struct ContextConfig : IContextConfig {
 			return null;
 		} );
 
+		Map<LaunchEvent, StartupCmd>();
 		Map<OpenDemoGallery, LoadDemoGalleryCommand>();
 		Map<OpenGallery, OpenGalleryCommand>();
 		Map<MenuItemSelect, SelectMenuItemCmd>();
@@ -49,7 +50,7 @@ readonly struct ContextConfig : IContextConfig {
 		injector.MapSingleton<MenuModel>();
 
 		// find a better place to send it
-		eventHub.Send( new LaunchEvent() );
+		//eventHub.Send( new LaunchEvent() );
 	}
 
 	public void ConfigureOld() {

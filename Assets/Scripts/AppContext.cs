@@ -1,5 +1,4 @@
 ﻿using Spine;
-using Spine.Signals;
 using UnityEngine;
 
 public static class AppContext {
@@ -11,9 +10,12 @@ public static class AppContext {
 
 	static Context GetContext() {
 		return context ??= new Context()
-			.InstallAppBundle()
-			.With<ContextConfig>()
-			.Initialize();
+				.InstallEventHub()
+				.InstallCommandHub()
+				.InstallMediatorHub()
+				.With<ContextConfig>()
+				.Send( new LaunchEvent() )
+				;
 	}
 
 	/**
@@ -33,31 +35,3 @@ public static class AppContext {
 	}
 }
 
-static class AppBundleInstaller {
-	public static Context InstallAppBundle(this Context context) {
-		context.Install( new AppBundle() );
-		return context;
-	}
-}
-
-readonly struct AppBundle : IContextExtension {
-	public void Extend(Context context) {
-		context
-			.InstallCommandHub()
-			.InstallMediatorHub();
-		
-		var injector = context.injector;
-		injector.MapSingleton<EventHub>();
-		//injector.MapSingleton<MediatorHub>();
-		//injector.MapSingleton<CommandHub>();
-	}
-}
-
-
-
-static class MediatorHubInstaller {
-	public static Context InstallMediatorHub(this Context context) {
-		context.injector.MapSingleton<MediatorHub>();
-		return context;
-	}
-} 

@@ -1,14 +1,12 @@
 ﻿using Spine;
 using Spine.DI;
+using UnityEngine;
 
 readonly struct StartupCmd : ICommand {
 	[Inject]
 	readonly LaunchEvent @event;
 
-	[Inject]
-	readonly LogAction Log;
-
 	public void Execute() {
-		Log( $"Startup: {@event.msg}" );
+		Debug.Log( $"Startup: {@event.msg}" );
 	}
 }

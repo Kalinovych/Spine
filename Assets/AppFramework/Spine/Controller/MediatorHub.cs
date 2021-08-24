@@ -8,4 +8,12 @@ namespace Spine {
 			
 		}
 	}
+
+	static class MediatorHubInstaller {
+		public static Context InstallMediatorHub(this Context context) {
+			context.injector.MapSingleton<MediatorHub>();
+			return context;
+		}
+	} 
+
 }

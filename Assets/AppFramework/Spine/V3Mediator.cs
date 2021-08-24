@@ -13,7 +13,6 @@ namespace Spine.Experiments {
 				.InstallEventHub()
 				.InstallCommandHub()
 				.With<CalculatorAppContextConfig>()
-				.Initialize()
 				.Send( new CalculationRequest( 2 ) );
 		}
 	}
