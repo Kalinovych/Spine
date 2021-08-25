@@ -13,6 +13,9 @@ namespace Spine.Experiments {
 				.InstallEventHub()
 				.InstallCommandHub()
 				.With<CalculatorAppContextConfig>()
+				.ConfigureCommands( hub => {
+					hub.Map<CalculationRequest, CalculateCommand>();
+				} )
 				.Send( new CalculationRequest( 2 ) );
 		}
 	}
@@ -22,7 +25,7 @@ namespace Spine.Experiments {
 		[Inject] Injector injector;
 
 		public void Configure() {
-			commandHub.Map<CalculationRequest, CalculateCommand>();
+			//commandHub.Map<CalculationRequest, CalculateCommand>();
 
 			injector.MapSingleton<ICalculationService>(new CalculationService());
 			

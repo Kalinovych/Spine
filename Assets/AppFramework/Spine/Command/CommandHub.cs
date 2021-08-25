@@ -1,3 +1,4 @@
+using System;
 using Spine.DI;
 using Spine.Signals;
 
@@ -76,6 +77,15 @@ namespace Spine {
 	public static class CommandHubExtension {
 		public static Context InstallCommandHub(this Context context) {
 			context.injector.MapSingleton<CommandHub>();
+			return context;
+		}
+
+		public static Context ConfigureCommands(this Context context, Action<CommandHub> configure) {
+			if (configure is null) {
+				throw new ArgumentNullException( nameof(configure) );
+			}
+
+			configure( context.injector.Retrieve<CommandHub>() );
 			return context;
 		}
 	}
