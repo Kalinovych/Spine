@@ -11,8 +11,8 @@ namespace Spine {
 		static void Log(object msg) => Debug.Log( $"[Context] {msg}" );
 
 		public Context() {
-			injector.MapSingleton( this );
-			injector.MapSingleton( injector );
+			injector.Add( this );
+			injector.Add( injector );
 		}
 	}
 

@@ -31,6 +31,9 @@ namespace Spine.DI {
 
 		readonly Dictionary<Type, DependencyProviderDelegate> mappings = new Dictionary<Type, DependencyProviderDelegate>();
 
+		static void Log(object msg) => Debug.Log( $"[{nameof(Injector)}] {msg}" );
+		static void LogError(object msg) => Debug.LogError( $"[{nameof(Injector)}] {msg}" );
+
 		/// <summary>
 		/// Maps dependency by it's Type
 		/// </summary>
@@ -61,18 +64,6 @@ namespace Spine.DI {
 			mappings.Add( typeof(T), provider );
 		}
 
-		public T Retrieve<T>() {
-			if (providers.TryGetValue( typeof(T), out var dependencyProvider )) {
-				return (T)dependencyProvider.Get();
-			}
-			
-			if (mappings.TryGetValue( typeof(T), out var dependencyProviderAction )) {
-				return (T)dependencyProviderAction( null );
-			}
-
-			return default;
-		}
-
 		// V3 //
 		interface IDependencyProvider {
 			object Get();
@@ -91,11 +82,13 @@ namespace Spine.DI {
 		}
 		
 		struct SingletonProvider<TDependency> : IDependencyProvider where TDependency : new() {
+			public Injector injector;
 			TDependency instance;
 
 			public object Get() {
 				if (instance is null) {
 					instance = new TDependency();
+					injector.InjectIn( instance );
 				}
 				return instance;
 			}
@@ -107,25 +100,45 @@ namespace Spine.DI {
 			providers.Add( typeof(TDependency), new InstanceProvider<TDependency>( dependency ) );
 		}
 
-		public void Add<TDependency, TImplementation>() where TImplementation : TDependency, new() {
-			providers.Add( typeof(TDependency), new SingletonProvider<TImplementation>() );
+		public void Add<TType, TImplementation>() where TImplementation : TType, new() {
+			providers.Add( typeof(TType), new SingletonProvider<TImplementation> {injector = this} );
 		}
 
 		public void Add<TDependency>() where TDependency : new() {
 			Add<TDependency, TDependency>();
 		}
 
+		public T Get<T>() {
+			if (providers.TryGetValue( typeof(T), out var provider )) {
+				return (T)provider.Get();
+			}
+
+			return default;
+		}
+
+		public T Retrieve<T>() {
+			if (providers.TryGetValue( typeof(T), out var dependencyProvider )) {
+				return (T)dependencyProvider.Get();
+			}
+
+			if (mappings.TryGetValue( typeof(T), out var dependencyProviderAction )) {
+				return (T)dependencyProviderAction( null );
+			}
+
+			return default;
+		}
+
 		/// <summary>
 		/// Resolve target dependencies marked with Inject Attribute
 		/// </summary>
 		/// <param name="target"></param>
-		public void Resolve(object target) {
-			Debug.Log( $"InjectIn: {target}" );
+		public void InjectIn(object target) {
+			Log( $"InjectIn: {target}" );
 
 			var injectionPoints = TypeDescriber.GetInjectionPoints( target.GetType() );
 
 			foreach (var injection in injectionPoints) {
-				Debug.Log( $"\tpoint: {injection.Name} : {injection.TargetType}" );
+				Log( $"\tpoint: {injection.Name} : {injection.TargetType}" );
 				var dependency = repository.Retrieve( injection.TargetType );
 
 				if (dependency == null && mappings.TryGetValue( injection.TargetType, out var providerAction )) {
@@ -137,11 +150,11 @@ namespace Spine.DI {
 				}
 
 				if (dependency == null && injection.isRequired) {
-					Debug.LogError( $">> \t{injection.Name} = <i>[missing required reference]</i>({injection.TargetType.Name})" );
+					LogError( $">> \t{injection.Name} = <i>[missing required reference]</i>({injection.TargetType.Name})" );
 					continue;
 				}
 
-				Debug.Log( $"\tinject: {target} ← {dependency}" );
+				Log( $"\tinject: {target} ← {dependency}" );
 				injection.ApplyTo( target, dependency );
 			}
 		}
@@ -149,7 +162,7 @@ namespace Spine.DI {
 		public T Resolve<T>() where T : new() {
 			object targetBoxed = new T();
 
-			Resolve( targetBoxed );
+			InjectIn( targetBoxed );
 
 			return (T)targetBoxed;
 		}
@@ -185,7 +198,7 @@ namespace Spine.DI {
 					}
 
 					if (dependency == null && injection.isRequired) {
-						Debug.LogError( $">> \t{injection.Name} = <i>[missing required reference]</i>({injection.TargetType.Name})" );
+						LogError( $">> \t{injection.Name} = <i>[missing required reference]</i>({injection.TargetType.Name})" );
 						continue;
 					}
 
@@ -199,7 +212,7 @@ namespace Spine.DI {
 		public void Resolve<T>(ref T target) where T : struct {
 			object targetBoxed = target;
 
-			Resolve( targetBoxed );
+			InjectIn( targetBoxed );
 
 			target = (T)targetBoxed;
 		}

@@ -23,7 +23,7 @@ public static class AppContext {
 	 */
 	public static void Resolve(object target) {
 		Log( $"Inject: {target}" );
-		Current.injector.Resolve( target );
+		Current.injector.InjectIn( target );
 	}
 
 	/**

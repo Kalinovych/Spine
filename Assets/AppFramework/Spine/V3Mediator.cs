@@ -1,4 +1,5 @@
-﻿using Spine.DI;
+﻿using System;
+using Spine.DI;
 using Spine.Signals;
 using UnityEngine;
 
@@ -13,6 +14,9 @@ namespace Spine.Experiments {
 				.InstallEventHub()
 				.InstallCommandHub()
 				.With<CalculatorAppContextConfig>()
+				.ConfigureModel( configurator => {
+					configurator.Add<ICalculationService, CalculationService>();
+				} )
 				.ConfigureCommands( hub => {
 					hub.Map<CalculationRequest, CalculateCommand>();
 				} )
@@ -20,6 +24,36 @@ namespace Spine.Experiments {
 		}
 	}
 
+	public static class ContextModelExtension {
+		/*public static Context ConfigureModel(this Context context, Action<Injector> configure) {
+			configure( context.injector );
+			return context;
+		}*/
+
+		public static Context ConfigureModel(this Context context, Action<IModelConfigurator> configure) {
+			//configure( context.injector );
+			configure( new ModelConfigurator( context.injector ) );
+			return context;
+		}
+	}
+
+	public interface IModelConfigurator {
+		void Add<TDependency, TImplementation>() where TImplementation : TDependency, new();
+	}
+
+	readonly struct ModelConfigurator : IModelConfigurator {
+		readonly Injector injector;
+
+		public ModelConfigurator(Injector injector) {
+			this.injector = injector;
+		}
+
+		public void Add<TDependency, TImplementation>() where TImplementation : TDependency, new() {
+			injector.Add<TDependency, TImplementation>();
+		}
+	} 
+	
+	
 	struct CalculatorAppContextConfig : IContextConfig {
 		[Inject] CommandHub commandHub;
 		[Inject] Injector injector;
@@ -27,9 +61,9 @@ namespace Spine.Experiments {
 		public void Configure() {
 			//commandHub.Map<CalculationRequest, CalculateCommand>();
 
-			injector.MapSingleton<ICalculationService>(new CalculationService());
+			//injector.MapSingleton<ICalculationService>(new CalculationService());
 			
-			injector.Add<ICalculationService, CalculationService>();
+			//injector.Add<ICalculationService, CalculationService>();
 		}
 	}
 

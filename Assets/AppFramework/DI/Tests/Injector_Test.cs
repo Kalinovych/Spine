@@ -71,11 +71,11 @@ public class Injector_Test {
 	public void Resolve_DI_MappedWithoutInstance() {
 		var command = new Command();
 		injector.Add<Service>();
-		injector.Resolve( command );
+		injector.InjectIn( command );
 		Assert.NotNull( command.service );
 
 		var anotherCommand = new Command();
-		injector.Resolve( anotherCommand );
+		injector.InjectIn( anotherCommand );
 		Assert.AreSame( command.service, anotherCommand.service );
 	}
 
@@ -84,12 +84,12 @@ public class Injector_Test {
 		var service = new Service();
 		var command = new Command();
 		injector.Add( service );
-		injector.Resolve( command );
+		injector.InjectIn( command );
 		Assert.NotNull( command.service );
 		Assert.AreSame( command.service, service );
 
 		var anotherCommand = new Command();
-		injector.Resolve( anotherCommand );
+		injector.InjectIn( anotherCommand );
 		Assert.AreSame( command.service, anotherCommand.service );
 	}
 
@@ -98,12 +98,12 @@ public class Injector_Test {
 		var service = new Service();
 		var command = new CommandWithIService();
 		injector.Add<IService>( service );
-		injector.Resolve( command );
+		injector.InjectIn( command );
 		Assert.NotNull( command.service );
 		Assert.AreSame( command.service, service );
 
 		var anotherCommand = new CommandWithIService();
-		injector.Resolve( anotherCommand );
+		injector.InjectIn( anotherCommand );
 		Assert.AreSame( command.service, anotherCommand.service );
 	}
 
@@ -124,7 +124,7 @@ public class Injector_Test {
 
 		var target = new InjectionTarget();
 
-		injector.Resolve( target );
+		injector.InjectIn( target );
 
 		Assert.AreEqual( subject, target.subject );
 		Assert.AreEqual( id, target.id );
@@ -161,7 +161,7 @@ public class Injector_Test {
 		injector.AutoMap( subject, id );
 
 		var target = new InjectionTarget();
-		injector.Resolve( target );
+		injector.InjectIn( target );
 		Assert.AreEqual( subject, target.subject );
 		Assert.AreEqual( id, target.id );
 	}
@@ -178,7 +178,7 @@ public class Injector_Test {
 		var text = "test_text";
 		injector.AutoMap( text );
 		var target = new PrivateInjectTarget();
-		injector.Resolve( target );
+		injector.InjectIn( target );
 		Assert.AreEqual( text, target.GetText() );
 	}
 
@@ -194,7 +194,7 @@ public class Injector_Test {
 
 		LogAssert.Expect( UnityEngine.LogType.Error, new Regex( @"(?<error>)", RegexOptions.IgnoreCase ) );
 
-		injector.Resolve( target );
+		injector.InjectIn( target );
 	}
 
 	class PropertyInjectTarget {
@@ -209,7 +209,7 @@ public class Injector_Test {
 		injector.AutoMap( subject );
 
 		var target = new PropertyInjectTarget();
-		injector.Resolve( target );
+		injector.InjectIn( target );
 
 		Assert.AreEqual( subject, target.Subject );
 	}
