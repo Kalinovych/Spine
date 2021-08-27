@@ -13,25 +13,26 @@ namespace Spine.Experiments {
 			var context = new Context()
 				.InstallEventHub()
 				.InstallCommandHub()
-				.With<CalculatorAppContextConfig>()
 				.ConfigureModel( configurator => {
 					configurator.Add<ICalculationService, CalculationService>();
+					configurator.Add<StringCalculationService>();
 				} )
 				.ConfigureCommands( hub => {
-					hub.Map<CalculationRequest, CalculateCommand>();
+					hub.Map<CalculateRequest, CalculateCommand>();
 				} )
-				.Send( new CalculationRequest( 2 ) );
+				.Send( new CalculateRequest( "2+2" ) )
+				;
+			print( $"→ get: {context.injector.Get<ICalculationService>()}" );
+
+			var service = new StringCalculationService();
+			print( $"test result: {service.Calc("2+2")}" );
 		}
 	}
 
+	//***//
+	
 	public static class ContextModelExtension {
-		/*public static Context ConfigureModel(this Context context, Action<Injector> configure) {
-			configure( context.injector );
-			return context;
-		}*/
-
 		public static Context ConfigureModel(this Context context, Action<IModelConfigurator> configure) {
-			//configure( context.injector );
 			configure( new ModelConfigurator( context.injector ) );
 			return context;
 		}
@@ -39,6 +40,7 @@ namespace Spine.Experiments {
 
 	public interface IModelConfigurator {
 		void Add<TDependency, TImplementation>() where TImplementation : TDependency, new();
+		void Add<TDependency>() where TDependency : new();
 	}
 
 	readonly struct ModelConfigurator : IModelConfigurator {
@@ -51,21 +53,37 @@ namespace Spine.Experiments {
 		public void Add<TDependency, TImplementation>() where TImplementation : TDependency, new() {
 			injector.Add<TDependency, TImplementation>();
 		}
-	} 
-	
-	
-	struct CalculatorAppContextConfig : IContextConfig {
-		[Inject] CommandHub commandHub;
-		[Inject] Injector injector;
 
-		public void Configure() {
-			//commandHub.Map<CalculationRequest, CalculateCommand>();
-
-			//injector.MapSingleton<ICalculationService>(new CalculationService());
-			
-			//injector.Add<ICalculationService, CalculationService>();
+		public void Add<TDependency>() where TDependency : new() {
+			injector.Add<TDependency>();
 		}
 	}
+	
+	//---
+	
+	readonly struct CalculateRequest {
+		public readonly string input;
+
+		public CalculateRequest(string input) {
+			this.input = input;
+		}
+	}
+
+	struct CalculateCommand : ICommand<CalculateRequest> {
+		[Inject] StringCalculationService service;
+		public void Execute(CalculateRequest request) {
+			Debug.Log( $"Calculate: {request.input}, result: {service.Calc( request.input )}" );
+		}
+	}
+
+	class StringCalculationService {
+		public float Calc(string input) {
+			Debug.Log( $"Calc: {input}" );
+			return 4;
+		}
+	}
+
+	//---
 
 	readonly struct CalculationRequest {
 		public readonly float value;
@@ -75,7 +93,7 @@ namespace Spine.Experiments {
 		}
 	}
 
-	struct CalculateCommand : ICommand<CalculationRequest> {
+	struct CalculationCommand : ICommand<CalculationRequest> {
 		[Inject] ICalculationService service;
 
 		public void Execute(CalculationRequest request) {

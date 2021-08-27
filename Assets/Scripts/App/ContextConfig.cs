@@ -9,6 +9,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using App.Models;
 
+readonly struct CommandsConfigurator {
+	public void Configure(CommandHub commandHub) {
+		
+	}
+}
+
 readonly struct ContextConfig : IContextConfig {
 	[Inject]
 	readonly EventHub eventHub;

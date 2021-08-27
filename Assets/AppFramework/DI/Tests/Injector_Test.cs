@@ -229,16 +229,4 @@ public class Injector_Test {
 
 		Assert.AreEqual( subject, client.subject );
 	}
-
-	[Test]
-	public void InjectIntoStruct() {
-		var subject = new Subject();
-
-		injector.AutoMap( subject );
-
-		var target = new StructInjectionClient();
-		injector.Resolve( ref target );
-
-		Assert.AreEqual( subject, target.subject );
-	}
 }

@@ -11,6 +11,7 @@ namespace Spine {
 		static void Log(object msg) => Debug.Log( $"[Context] {msg}" );
 
 		public Context() {
+			Log( "Context" );
 			injector.Add( this );
 			injector.Add( injector );
 		}
@@ -22,7 +23,7 @@ namespace Spine {
 
 	public static class ContextConfigurator {
 		public static Context With<TConfig>(this Context context) where TConfig : struct, IContextConfig {
-			context.Resolve<TConfig>().Configure();
+			context.injector.Resolve<TConfig>().Configure();
 			return context;
 		}
 	}

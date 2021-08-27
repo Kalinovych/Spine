@@ -60,7 +60,7 @@ namespace Spine {
 		}
 
 		public void Execute(TRequest request) {
-			injector.With( request ).Resolve<TCommand>().Execute( request );
+			injector.Resolve<TCommand>().Execute( request );
 		}
 	}
 
