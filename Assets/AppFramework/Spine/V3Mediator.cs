@@ -39,8 +39,9 @@ namespace Spine.Experiments {
 	}
 
 	public interface IModelConfigurator {
-		void Add<TDependency, TImplementation>() where TImplementation : TDependency, new();
-		void Add<TDependency>() where TDependency : new();
+		IModelConfigurator Add<TDependency, TImplementation>() where TImplementation : TDependency, new();
+		IModelConfigurator Add<TDependency>() where TDependency : new();
+		IModelConfigurator Add<TDependency>(TDependency dependency);
 	}
 
 	readonly struct ModelConfigurator : IModelConfigurator {
@@ -50,12 +51,19 @@ namespace Spine.Experiments {
 			this.injector = injector;
 		}
 
-		public void Add<TDependency, TImplementation>() where TImplementation : TDependency, new() {
+		public IModelConfigurator Add<TDependency, TImplementation>() where TImplementation : TDependency, new() {
 			injector.Add<TDependency, TImplementation>();
+			return this;
 		}
 
-		public void Add<TDependency>() where TDependency : new() {
+		public IModelConfigurator Add<TDependency>() where TDependency : new() {
 			injector.Add<TDependency>();
+			return this;
+		}
+
+		public IModelConfigurator Add<TDependency>(TDependency dependency) {
+			injector.Add( dependency );
+			return this;
 		}
 	}
 	

@@ -8,12 +8,8 @@ using Spine.DI;
 using UnityEngine;
 using UnityEngine.UI;
 using App.Models;
-
-readonly struct CommandsConfigurator {
-	public void Configure(CommandHub commandHub) {
-		
-	}
-}
+using Spine.Experiments;
+using UnityEditor;
 
 readonly struct ContextConfig : IContextConfig {
 	[Inject]
@@ -25,58 +21,44 @@ readonly struct ContextConfig : IContextConfig {
 	[Inject]
 	readonly MediatorHub mediatorHub;
 
-	[Inject]
-	readonly CommandHub commandHub;
-
-	public void Configure() {
+	public void Configure(Context context) {
 		// GO's component find & inject
-		injector.Map<Button>( component => {
+		context.injector.Map<Button>( component => {
 			if (component is MonoBehaviour c)
 				return c.GetComponent<Button>();
 			return null;
 		} );
-		
-		ConfigureGallery();
-	}
 
-	void ConfigureGallery() {
 		injector.Map<GalleryView>( component => {
 			if (component is MonoBehaviour c)
 				return c.GetComponent<GalleryView>();
 			return null;
 		} );
 
-		Map<LaunchEvent, StartupCmd>();
-		Map<OpenDemoGallery, LoadDemoGalleryCommand>();
-		Map<OpenGallery, OpenGalleryCommand>();
-		Map<MenuItemSelect, SelectMenuItemCmd>();
-		Map<ClearGallery, ClearGalleryCommand>();
-
-		injector.MapSingleton<GalleryModel>();
-		injector.MapSingleton<MenuModel>();
-
-		// find a better place to send it
-		//eventHub.Send( new LaunchEvent() );
+		
+		context
+			.ConfigureCommands( ConfigureCommands )
+			.ConfigureModel( ConfigureModel );
 	}
 
-	public void ConfigureOld() {
-		injector.MapSingleton<MenuModel>();
-		injector.MapSingleton<LogAction>( Debug.Log );
-
-		On<LaunchEvent>().Do<StartupCmd>();
-		On<MenuItemSelect>().Do<SelectMenuItemCmd>();
-		//On<OpenSceneRequest>().Do<LoadSceneCmd>();
-		//On<LaunchEvent>().Do<LoadAdditional>();
-		
-		Map<OpenScreenRequest>().To<OpenScreenCommand>();
-		Map<CloseScreenRequest>().To<CloseScreenCommand>();
-		
-		eventHub.Send( new LaunchEvent() );
+	public static void ConfigureModel(IModelConfigurator models) {
+		models
+			.AddScriptableModel<GalleryModel>()
+			//.Add<GalleryModel>()
+			.Add<MenuModel>()
+			;
 	}
 
-	EventMapper<T> On<T>() => commandHub.On<T>();
-	EventMapper<T> Map<T>() => commandHub.On<T>();
-	void Map<TRequest, TCommand>() where TCommand: struct, ICommand => commandHub.On<TRequest>().Do<TCommand>();
+	public static void ConfigureCommands(CommandHub commandHub) {
+		commandHub
+			.Map<LaunchEvent, StartupCmd>()
+			.Map<OpenDemoGallery, LoadDemoGalleryCommand>()
+			.Map<OpenGallery, OpenGalleryCommand>()
+			.Map<ClearGallery, ClearGalleryCommand>()
+			.Map<MenuItemSelect, SelectMenuItemCmd>()
+			;
+	}
+
 }
 
 #region Helpers

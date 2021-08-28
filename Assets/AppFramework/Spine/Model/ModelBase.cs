@@ -8,4 +8,6 @@ namespace Spine {
 
 		protected void Send<T>(T signal) => eventHub.Send( signal );
 	}
+	
+	
 }

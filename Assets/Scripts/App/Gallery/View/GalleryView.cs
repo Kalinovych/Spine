@@ -6,6 +6,7 @@ public class GalleryView : MonoBehaviour {
 	public GalleryItemView GalleryItemPrefab;
 
 	[SerializeField] int maxCols = 1;
+	[SerializeField] int maxRows = 3;
 	[SerializeField] float itemWidth = 1f;
 	[SerializeField] float itemHeight = 1f;
 	[SerializeField] float itemSpacing = 0f;
@@ -40,6 +41,7 @@ public class GalleryView : MonoBehaviour {
 
 	public void LayoutItems() {
 		var viewCount = views.Length;
+		var maxVisible = maxCols * maxRows; 
 		var leftOrigin = -(MaxCols - 1) * (itemWidth + itemSpacing) * 0.5f;
 		for (int i = 0; i < viewCount; i++) {
 			var col = i % MaxCols;
@@ -47,6 +49,9 @@ public class GalleryView : MonoBehaviour {
 			var left = col * (itemWidth + itemSpacing);
 
 			views[i].transform.localPosition = new Vector3( leftOrigin + left, -(itemHeight + itemSpacing) * row, 0f );
+
+			var isVisible = maxVisible == 0 || i < maxVisible;
+			views[i].gameObject.SetActive( isVisible );
 		}
 	}
 

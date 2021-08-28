@@ -10,9 +10,10 @@ namespace Spine {
 
 		public EventMapper<T> Map<T>() => new EventMapper<T>( injector, eventHub );
 
-		public void Map<TRequest, TCommand>() where TCommand : struct, ICommand<TRequest> {
+		public CommandHub Map<TRequest, TCommand>() where TCommand : struct, ICommand<TRequest> {
 			var ce = new CommandExecutor<TRequest, TCommand>( injector );
 			eventHub.On<TRequest>( ce.Execute );
+			return this;
 		}
 	}
 

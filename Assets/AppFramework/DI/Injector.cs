@@ -1,8 +1,10 @@
-﻿using System;
+﻿//#define LOG_VERBOSE
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 using JetBrains.Annotations;
-using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace Spine.DI {
 	[MeansImplicitUse]
@@ -31,6 +33,7 @@ namespace Spine.DI {
 
 		readonly Dictionary<Type, DependencyProviderDelegate> mappings = new Dictionary<Type, DependencyProviderDelegate>();
 
+		[Conditional("LOG_VERBOSE")]
 		static void Log(object msg) => Debug.Log( $"[{nameof(Injector)}] {msg}" );
 		static void LogError(object msg) => Debug.LogError( $"[{nameof(Injector)}] {msg}" );
 

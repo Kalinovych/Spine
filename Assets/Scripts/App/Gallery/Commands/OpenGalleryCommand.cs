@@ -2,11 +2,10 @@
 using Spine.DI;
 
 namespace App {
-	public struct OpenGalleryCommand : ICommand {
-		[Inject] OpenGallery request;
+	public struct OpenGalleryCommand : ICommand<OpenGallery> {
 		[Inject] GalleryModel model;
 
-		public void Execute() {
+		public void Execute(OpenGallery request) {
 			model.SetGallery( request.gallery );
 		}
 	}

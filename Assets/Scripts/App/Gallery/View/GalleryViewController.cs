@@ -6,7 +6,7 @@ using UnityEngine;
 namespace App {
     public class GalleryViewController : Mediator {
 		[Inject] GalleryView view;
-		[Inject] GalleryModel model;
+		[Inject] public GalleryModel model;
 
 		void Start() {
 			UpdateView();

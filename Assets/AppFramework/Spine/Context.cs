@@ -18,12 +18,12 @@ namespace Spine {
 	}
 
 	public interface IContextConfig {
-		public void Configure();
+		public void Configure(Context context);
 	}
 
 	public static class ContextConfigurator {
 		public static Context With<TConfig>(this Context context) where TConfig : struct, IContextConfig {
-			context.injector.Resolve<TConfig>().Configure();
+			context.injector.Resolve<TConfig>().Configure( context );
 			return context;
 		}
 	}

@@ -15,5 +15,19 @@ namespace Spine {
 			configure( context.injector.Get<CommandHub>() );
 			return context;
 		}
+		public static Context ConfigureCommands(this Context context, ICommandsConfigurator configurator) {
+			if (configurator is null) {
+				throw new ArgumentNullException( nameof(configurator) );
+			}
+
+			configurator.Configure( context.injector.Get<CommandHub>() );
+			return context;
+		}
 	}
+
+
+	public interface ICommandsConfigurator {
+		void Configure(CommandHub commandHub);
+	}
+
 }
