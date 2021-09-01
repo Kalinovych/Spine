@@ -4,7 +4,7 @@ using Spine.DI;
 using UnityEngine;
 
 namespace App {
-    public class GalleryViewController : Mediator {
+    public class GalleryViewController : ControllerBase {
 		[Inject] GalleryView view;
 		[Inject] public GalleryModel model;
 

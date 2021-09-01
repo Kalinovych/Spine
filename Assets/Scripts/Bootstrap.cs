@@ -1,12 +1,12 @@
 using UnityEngine;
 
 readonly struct Bootstrap {
-	//[RuntimeInitializeOnLoadMethod]
+	[RuntimeInitializeOnLoadMethod]
 	static void Init() {
 		Debug.Log( "Bootstrap.Init" );
-		var go = new GameObject( "[AppContext]" );
-		go.AddComponent<AppContextBehaviour>();
-		Object.DontDestroyOnLoad( go );
+		//var go = new GameObject( "[AppContext]" );
+		//go.AddComponent<AppContextBehaviour>();
+		//Object.DontDestroyOnLoad( go );
 	}
 }
 

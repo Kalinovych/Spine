@@ -4,7 +4,7 @@ using Spine.Signals;
 using UnityEngine;
 
 namespace Spine {
-	public abstract class Mediator : MonoBehaviour {
+	public abstract class ControllerBase : MonoBehaviour {
 		[Inject]
 		protected readonly EventHub eventHub;
 
@@ -13,10 +13,9 @@ namespace Spine {
 		protected void OffEvent<T>(Action<T> callback) => eventHub.Off( callback );
 
 		protected virtual void Awake() {
-			print( "Mediator.Awake" );
+			print( "ControllerBase.Awake" );
 		
-			// TODO: resolve this shit!
-			AppContext.Resolve( this );
+			this.Resolve();
 
 			OnInitialized();
 		}
@@ -25,10 +24,10 @@ namespace Spine {
 		protected virtual void OnDestroying() {}
 
 		protected virtual void OnDestroy() {
+			print( "ControllerBase.OnDestroy" );
 			OnDestroying();
 
-			// TODO: resolve this shit!
-			AppContext.Release( this );
+			this.Release();
 		}
 	}
 }

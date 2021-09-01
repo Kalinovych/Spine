@@ -22,14 +22,10 @@ namespace Spine.Experiments {
 				} )
 				.Send( new CalculateRequest( "2+2" ) )
 				;
-			print( $"→ get: {context.injector.Get<ICalculationService>()}" );
-
-			var service = new StringCalculationService();
-			print( $"test result: {service.Calc("2+2")}" );
 		}
 	}
 
-	//***//
+	//*** Framework ***//
 	
 	public static class ContextModelExtension {
 		public static Context ConfigureModel(this Context context, Action<IModelConfigurator> configure) {
@@ -37,7 +33,7 @@ namespace Spine.Experiments {
 			return context;
 		}
 	}
-
+	
 	public interface IModelConfigurator {
 		IModelConfigurator Add<TDependency, TImplementation>() where TImplementation : TDependency, new();
 		IModelConfigurator Add<TDependency>() where TDependency : new();

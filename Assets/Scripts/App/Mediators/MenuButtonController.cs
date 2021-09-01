@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent( typeof(Button) )]
-public class MenuButtonMediator : Mediator {
+public class MenuButtonController : ControllerBase {
 	public int menuItemIndex;
 
 	[Inject]

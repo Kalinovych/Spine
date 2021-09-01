@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using App.Models;
 using Spine.Experiments;
+using Spine.Integration;
 using UnityEditor;
 
 readonly struct ContextConfig : IContextConfig {
@@ -19,7 +20,7 @@ readonly struct ContextConfig : IContextConfig {
 	readonly Injector injector;
 
 	[Inject]
-	readonly MediatorHub mediatorHub;
+	readonly ControllerHub controllerHub;
 
 	public void Configure(Context context) {
 		// GO's component find & inject
@@ -43,8 +44,7 @@ readonly struct ContextConfig : IContextConfig {
 
 	public static void ConfigureModel(IModelConfigurator models) {
 		models
-			.AddScriptableModel<GalleryModel>()
-			//.Add<GalleryModel>()
+			.Add<GalleryModel>()
 			.Add<MenuModel>()
 			;
 	}
