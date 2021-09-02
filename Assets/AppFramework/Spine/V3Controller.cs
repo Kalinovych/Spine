@@ -5,13 +5,11 @@ using Spine.Signals;
 using UnityEngine;
 
 namespace Spine.Experiments {
-	public class V3Mediator : MonoBehaviour {
+	public class V3Controller : MonoBehaviour {
 		Context context;
 
 		void Start() {
 			print( "V3Mediator.Start" );
-
-			//new V3Program().Run();+
 
 			context = new Context()
 					.InstallEventHub()
