@@ -4,6 +4,9 @@ readonly struct Bootstrap {
 	[RuntimeInitializeOnLoadMethod]
 	static void Init() {
 		Debug.Log( "Bootstrap.Init" );
+
+		//AppContext.GetContext();
+
 		//var go = new GameObject( "[AppContext]" );
 		//go.AddComponent<AppContextBehaviour>();
 		//Object.DontDestroyOnLoad( go );
@@ -17,15 +20,5 @@ class BootstrapOnLoad {
 		var go = new GameObject( "[AppContext]" );
 		go.AddComponent<AppContextBehaviour>();
 		Object.DontDestroyOnLoad( go );
-	}
-}
-
-public class AppContextBehaviour : MonoBehaviour {
-	void Awake() {
-		DontDestroyOnLoad(gameObject);
-	}
-
-	void Start() {
-		
 	}
 }

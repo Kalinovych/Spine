@@ -6,7 +6,7 @@ public static class AppContext {
 
 	static Context context;
 
-	static Context GetContext() {
+	public static Context GetContext() {
 		return context ??= new Context()
 				.InstallEventHub()
 				.InstallCommandHub()

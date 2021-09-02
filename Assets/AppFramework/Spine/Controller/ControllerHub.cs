@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Spine {
+﻿namespace Spine {
 	public class ControllerHub {
 		internal static ControllerHub instance;
 
@@ -21,7 +19,7 @@ namespace Spine {
 		public static void Resolve(this ControllerBase controller) {
 			ControllerHub.globalContext.injector.InjectIn( controller );
 		}
-		
+
 		public static void Release(this ControllerBase controller) {
 			ControllerHub.globalContext.injector.Clear( controller );
 		}

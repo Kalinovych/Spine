@@ -1,39 +1,49 @@
 ﻿using System;
+using System.Linq;
 using Spine.DI;
 using Spine.Signals;
 using UnityEngine;
 
 namespace Spine.Experiments {
 	public class V3Mediator : MonoBehaviour {
+		Context context;
+
 		void Start() {
 			print( "V3Mediator.Start" );
 
 			//new V3Program().Run();+
 
-			var context = new Context()
-				.InstallEventHub()
-				.InstallCommandHub()
-				.ConfigureModel( configurator => {
-					configurator.Add<ICalculationService, CalculationService>();
-					configurator.Add<StringCalculationService>();
-				} )
-				.ConfigureCommands( hub => {
-					hub.Map<CalculateRequest, CalculateCommand>();
-				} )
-				.Send( new CalculateRequest( "2+2" ) )
+			context = new Context()
+					.InstallEventHub()
+					.InstallCommandHub()
+					.ConfigureModel( configurator => {
+						configurator.Add<ICalculationService, AddCalculationService>();
+					} )
+					.ConfigureCommands( hub => {
+						hub.Map<CalculateRequest, CalculateCommand>();
+						hub.Map<CalculationResult, PrintResultToLog>();
+					} )
+					.Send( new CalculateRequest( "2+2" ) )
+					.Send( new CalculateRequest( "2+3" ) )
 				;
 		}
 	}
 
+	readonly struct PrintResultToLog : ICommand<CalculationResult> {
+		public void Execute(CalculationResult result) {
+			Debug.Log( $"Result: {result.Value}" );
+		}
+	}
+
 	//*** Framework ***//
-	
+
 	public static class ContextModelExtension {
 		public static Context ConfigureModel(this Context context, Action<IModelConfigurator> configure) {
 			configure( new ModelConfigurator( context.injector ) );
 			return context;
 		}
 	}
-	
+
 	public interface IModelConfigurator {
 		IModelConfigurator Add<TDependency, TImplementation>() where TImplementation : TDependency, new();
 		IModelConfigurator Add<TDependency>() where TDependency : new();
@@ -62,9 +72,9 @@ namespace Spine.Experiments {
 			return this;
 		}
 	}
-	
-	//---
-	
+
+	//--- App ---//
+
 	readonly struct CalculateRequest {
 		public readonly string input;
 
@@ -73,48 +83,55 @@ namespace Spine.Experiments {
 		}
 	}
 
+	readonly struct CalculationResult {
+		public readonly float Value;
+
+		public CalculationResult(float value) {
+			Value = value;
+		}
+	}
+
 	struct CalculateCommand : ICommand<CalculateRequest> {
-		[Inject] StringCalculationService service;
-		public void Execute(CalculateRequest request) {
-			Debug.Log( $"Calculate: {request.input}, result: {service.Calc( request.input )}" );
-		}
-	}
-
-	class StringCalculationService {
-		public float Calc(string input) {
-			Debug.Log( $"Calc: {input}" );
-			return 4;
-		}
-	}
-
-	//---
-
-	readonly struct CalculationRequest {
-		public readonly float value;
-
-		public CalculationRequest(float value) {
-			this.value = value;
-		}
-	}
-
-	struct CalculationCommand : ICommand<CalculationRequest> {
 		[Inject] ICalculationService service;
 
-		public void Execute(CalculationRequest request) {
-			Debug.Log( $"CalculateCommand.Execute: {request.value} -> {service.Calculate( request )}" );
+		public void Execute(CalculateRequest request) {
+			//Debug.Log( $"Calculate: {request.input}, result: {service.Calc( request.input )}" );
+			Debug.Log( $"Calculate: {request.input}" );
+
+			service.Calculate( request.input );
 		}
 	}
 
-
 	interface ICalculationService {
-		float Calculate(CalculationRequest request);
+		float Calc(string input);
+
+		void Calculate(string input);
 	}
 
-	struct CalculationService : ICalculationService {
-		const float rate = 2f;
+	class TwoPlusTwoCalculationService : ICalculationService {
+		public float Calc(string input) {
+			Debug.Log( $"TwoPlusTwoCalculationService.Calc: {input}" );
+			return 4;
+		}
 
-		public float Calculate(CalculationRequest request) {
-			return request.value * rate;
+		[Inject] EventHub eventHub;
+
+		public void Calculate(string input) {
+			eventHub.Send( new CalculationResult( 4 ) );
+		}
+	}
+
+	class AddCalculationService : ICalculationService {
+		public float Calc(string input) {
+			Debug.Log( $"AddCalculationService.Calc: {input}" );
+			var parts = input.Split( '+' ).Select( float.Parse ).ToArray();
+			return parts[0] + parts[1];
+		}
+
+		[Inject] EventHub eventHub;
+
+		public void Calculate(string input) {
+			eventHub.Send( new CalculationResult( Calc( input ) ) );
 		}
 	}
 }

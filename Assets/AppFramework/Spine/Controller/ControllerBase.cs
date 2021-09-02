@@ -14,7 +14,7 @@ namespace Spine {
 
 		protected virtual void Awake() {
 			print( "ControllerBase.Awake" );
-		
+
 			this.Resolve();
 
 			OnInitialized();
