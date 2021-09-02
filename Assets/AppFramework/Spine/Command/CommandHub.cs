@@ -12,7 +12,7 @@ namespace Spine {
 			eventHub.On<TRequest>( ce.Execute );
 			return this;
 		}
-
+		
 		public CommandHub Map(Type requestType, Type commandType) {
 			return this;
 		}
@@ -32,5 +32,21 @@ namespace Spine {
 
 	public interface ICommand<in TRequest> {
 		void Execute(TRequest request);
+	}
+	
+	public interface ICommand<in TRequest, out TResult> {
+		TResult Execute(TRequest request);
+	}
+	
+	readonly struct CommandExecutor<TRequest, TResult, TCommand> where TCommand : struct, ICommand<TRequest, TResult> {
+		readonly Injector injector;
+
+		public CommandExecutor(Injector injector) {
+			this.injector = injector;
+		}
+
+		public TResult Execute(TRequest request) {
+			return injector.Resolve<TCommand>().Execute( request );
+		}
 	}
 }

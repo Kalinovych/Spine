@@ -28,13 +28,13 @@ namespace Spine.Experiments {
 			} );
 	}
 
+	//--- App ---//
+
 	readonly struct PrintResultToLog : ICommand<CalculationResult> {
 		public void Execute(CalculationResult result) {
 			Debug.Log( $"Result: {result.Value}" );
 		}
 	}
-
-	//--- App ---//
 
 	readonly struct CalculateRequest {
 		public readonly string input;
@@ -54,31 +54,33 @@ namespace Spine.Experiments {
 
 	struct CalculateCommand : ICommand<CalculateRequest> {
 		[Inject] ICalculationService service;
+		[Inject] EventHub eventHub;
 
 		public void Execute(CalculateRequest request) {
 			Debug.Log( $"Calculate: {request.input}" );
 
-			service.Calculate( request.input );
+			var result = service.Calculate( request.input );
+			eventHub.Send( new CalculationResult( result ) );
 		}
 	}
 
 	interface ICalculationService {
-		void Calculate(string input);
+		float Calculate(string input);
 	}
 
 	class TwoPlusTwoCalculationService : ICalculationService {
 		[Inject] EventHub eventHub;
 
-		public void Calculate(string input) {
-			eventHub.Send( new CalculationResult( 4 ) );
+		public float Calculate(string input) {
+			return 4;
 		}
 	}
 
 	class AddCalculationService : ICalculationService {
 		[Inject] EventHub eventHub;
 
-		public void Calculate(string input) {
-			eventHub.Send( new CalculationResult( Calc( input ) ) );
+		public float Calculate(string input) {
+			return Calc( input );
 		}
 
 		public float Calc(string input) {

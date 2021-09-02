@@ -11,8 +11,8 @@ readonly struct ContextConfig : IContextConfig {
 		context
 			.ConfigureModel( ConfigureModel )
 			.ConfigureView( ConfigureView )
-			//.ConfigureCommands( ConfigureCommands )
-			.AutoConfigureCommands()
+			.ConfigureCommands( ConfigureCommands )
+			//.AutoConfigureCommands()
 			;
 	}
 
