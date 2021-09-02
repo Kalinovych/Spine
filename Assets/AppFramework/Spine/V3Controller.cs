@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Spine.DI;
 using Spine.Signals;
 using UnityEngine;
@@ -33,44 +32,6 @@ namespace Spine.Experiments {
 		}
 	}
 
-	//*** Framework ***//
-
-	public static class ContextModelExtension {
-		public static Context ConfigureModel(this Context context, Action<IModelConfigurator> configure) {
-			configure( new ModelConfigurator( context.injector ) );
-			return context;
-		}
-	}
-
-	public interface IModelConfigurator {
-		IModelConfigurator Add<TDependency, TImplementation>() where TImplementation : TDependency, new();
-		IModelConfigurator Add<TDependency>() where TDependency : new();
-		IModelConfigurator Add<TDependency>(TDependency dependency);
-	}
-
-	readonly struct ModelConfigurator : IModelConfigurator {
-		readonly Injector injector;
-
-		public ModelConfigurator(Injector injector) {
-			this.injector = injector;
-		}
-
-		public IModelConfigurator Add<TDependency, TImplementation>() where TImplementation : TDependency, new() {
-			injector.Add<TDependency, TImplementation>();
-			return this;
-		}
-
-		public IModelConfigurator Add<TDependency>() where TDependency : new() {
-			injector.Add<TDependency>();
-			return this;
-		}
-
-		public IModelConfigurator Add<TDependency>(TDependency dependency) {
-			injector.Add( dependency );
-			return this;
-		}
-	}
-
 	//--- App ---//
 
 	readonly struct CalculateRequest {
@@ -93,7 +54,6 @@ namespace Spine.Experiments {
 		[Inject] ICalculationService service;
 
 		public void Execute(CalculateRequest request) {
-			//Debug.Log( $"Calculate: {request.input}, result: {service.Calc( request.input )}" );
 			Debug.Log( $"Calculate: {request.input}" );
 
 			service.Calculate( request.input );
