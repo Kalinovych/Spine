@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEngine;
 
 namespace Spine.Integration {
-	public static class ContextScriptableModelExtension {
+	public static class ScriptableModelExtension {
 		public static IModelConfigurator AddScriptableModel<T>(this IModelConfigurator configurator) where T : ScriptableObject {
 			T instance = null;
 			

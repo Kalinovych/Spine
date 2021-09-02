@@ -1,55 +1,29 @@
 ﻿using App;
 using App.Commands;
-using App.Requests;
-using App.Utils;
-using Spine.Signals;
-using Spine;
-using Spine.DI;
-using UnityEngine;
-using UnityEngine.UI;
 using App.Models;
+using Spine;
 using Spine.Experiments;
 using Spine.Integration;
-using UnityEditor;
+using UnityEngine.UI;
 
 readonly struct ContextConfig : IContextConfig {
-	[Inject]
-	readonly EventHub eventHub;
-
-	[Inject]
-	readonly Injector injector;
-
-	[Inject]
-	readonly ControllerHub controllerHub;
-
 	public void Configure(Context context) {
-		// GO's component find & inject
-		context.injector.Map<Button>( component => {
-			if (component is MonoBehaviour c)
-				return c.GetComponent<Button>();
-			return null;
-		} );
-
-		injector.Map<GalleryView>( component => {
-			if (component is MonoBehaviour c)
-				return c.GetComponent<GalleryView>();
-			return null;
-		} );
-
-		
 		context
+			.ConfigureModel( ConfigureModel )
+			.ConfigureView( ConfigureView )
 			.ConfigureCommands( ConfigureCommands )
-			.ConfigureModel( ConfigureModel );
+			//.AutoConfigureCommands()
+			;
 	}
 
-	public static void ConfigureModel(IModelConfigurator models) {
+	static void ConfigureModel(IModelConfigurator models) {
 		models
 			.Add<GalleryModel>()
 			.Add<MenuModel>()
 			;
 	}
 
-	public static void ConfigureCommands(CommandHub commandHub) {
+	static void ConfigureCommands(CommandHub commandHub) {
 		commandHub
 			.Map<LaunchEvent, StartupCmd>()
 			.Map<OpenDemoGallery, LoadDemoGalleryCommand>()
@@ -59,9 +33,9 @@ readonly struct ContextConfig : IContextConfig {
 			;
 	}
 
+	static void ConfigureView(ComponentConfigurator configurator) {
+		configurator
+			.AddView<GalleryView>()
+			.AddView<Button>();
+	}
 }
-
-#region Helpers
-
-#endregion
-

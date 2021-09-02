@@ -1,0 +1,17 @@
+{
+    "name": "Spine",
+    "rootNamespace": "Spine",
+    "references": [
+        "GUID:3ae434def79b3f547834e5ae725c5eae",
+        "GUID:dfc8043f82ad461c9c413e6bd7a8b9d6"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,4 +1,7 @@
 using System;
+using System.Linq;
+using System.Reflection;
+using UnityEngine;
 
 namespace Spine {
 	public static class CommandHubExtension {
@@ -15,19 +18,19 @@ namespace Spine {
 			configure( context.injector.Get<CommandHub>() );
 			return context;
 		}
-		public static Context ConfigureCommands(this Context context, ICommandsConfigurator configurator) {
-			if (configurator is null) {
-				throw new ArgumentNullException( nameof(configurator) );
-			}
 
-			configurator.Configure( context.injector.Get<CommandHub>() );
+		public static Context AutoConfigureCommands(this Context context) {
+			var assembly = Assembly.GetCallingAssembly();
+			var commands = assembly
+				.ExportedTypes
+				.Where( type => type
+					.GetInterfaces()
+					.Any( i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICommand<>) ) );
+			
+			foreach (var type in commands) {
+				Debug.Log( $" → Command found: {type}" );
+			}
 			return context;
 		}
 	}
-
-
-	public interface ICommandsConfigurator {
-		void Configure(CommandHub commandHub);
-	}
-
 }
