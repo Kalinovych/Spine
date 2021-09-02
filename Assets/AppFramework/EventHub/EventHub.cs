@@ -10,6 +10,10 @@ namespace Spine.Signals {
 			AddReceiver( handler, once: false );
 		}
 
+		public void On<T>(Type eventType, Action<T> handler) {
+			
+		}
+
 		public void Once<T>(Action<T> handler) {
 			AddReceiver( handler, once: true );
 		}
@@ -56,13 +60,11 @@ namespace Spine.Signals {
 		}
 
 		internal Channel<TSignal> GetChannel<TSignal>() {
-			var type = typeof(TSignal);
-
-			if (channelMap.ContainsKey( type )) {
-				return (Channel<TSignal>) channelMap[type];
-			}
-
-			return null;
+			return (Channel<TSignal>) GetChannel(typeof(TSignal));
+		}
+		
+		internal Channel GetChannel(Type type) {
+			return channelMap.ContainsKey( type ) ? channelMap[type] : null;
 		}
 
 		internal Channel<TSignal> GetOrCreateChannel<TSignal>() {

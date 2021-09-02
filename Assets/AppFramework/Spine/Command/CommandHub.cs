@@ -1,3 +1,4 @@
+using System;
 using Spine.DI;
 using Spine.Signals;
 
@@ -9,6 +10,10 @@ namespace Spine {
 		public CommandHub Map<TRequest, TCommand>() where TCommand : struct, ICommand<TRequest> {
 			var ce = new CommandExecutor<TRequest, TCommand>( injector );
 			eventHub.On<TRequest>( ce.Execute );
+			return this;
+		}
+
+		public CommandHub Map(Type requestType, Type commandType) {
 			return this;
 		}
 	}
