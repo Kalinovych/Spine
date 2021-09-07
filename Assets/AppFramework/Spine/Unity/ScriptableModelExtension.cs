@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace Spine.Integration {
 	public static class ScriptableModelExtension {
+	#if UNITY_EDITOR
 		public static IModelConfigurator AddScriptableModel<T>(this IModelConfigurator configurator) where T : ScriptableObject {
 			T instance = null;
 			
@@ -26,5 +27,6 @@ namespace Spine.Integration {
 			configurator.Add( instance );
 			return configurator;
 		}
+	#endif
 	}
 }
