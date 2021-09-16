@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.kalinovych.editorhelpers": {
+      "version": "https://github.com/Kalinovych/EditorHelpers.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "ea3f46d05cb25dd954c1d2d3b00228e292ac4a13"
+    },
     "com.unity.collab-proxy": {
       "version": "1.7.1",
       "depth": 0,

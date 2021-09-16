@@ -1,4 +1,5 @@
-﻿using Spine.DI;
+﻿using System;
+using Spine.DI;
 using Spine.Signals;
 
 namespace Spine {
