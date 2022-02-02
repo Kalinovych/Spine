@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Spine {
 	public static class CommandHubExtension {
-		public static Context InstallCommandHub(this Context context) {
+		public static Context WithCommandHub(this Context context) {
 			context.injector.Add<CommandHub>();
 			return context;
 		}

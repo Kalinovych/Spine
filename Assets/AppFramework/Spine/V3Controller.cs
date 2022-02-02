@@ -16,9 +16,10 @@ namespace Spine.Experiments {
 				;
 		}
 
-		static Context BuildContext() => new Context()
-			.InstallEventHub()
-			.InstallCommandHub()
+		static Context BuildContext()
+			=> new Context()
+			.WithEventHub()
+			.WithCommandHub()
 			.ConfigureModel( configurator => {
 				configurator.Add<ICalculationService, AddCalculationService>();
 			} )

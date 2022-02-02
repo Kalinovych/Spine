@@ -2,18 +2,17 @@
 using UnityEngine;
 
 public static class AppContext {
-	public static Context Current => GetContext();
-
 	static Context context;
 
-	public static Context GetContext() {
-		return context ??= new Context()
-				.InstallEventHub()
-				.InstallCommandHub()
-				.InstallControllerHub()
-				.With<ContextConfig>()
-				.Send( new LaunchEvent() )
-				;
+	[RuntimeInitializeOnLoadMethod( RuntimeInitializeLoadType.BeforeSceneLoad )]
+	static void Initialize() {
+		Debug.Log( "[AppContext] Initialize" );
+		context ??= new Context()
+				.WithEventHub()
+				.WithCommandHub()
+				.WithControllerHub()
+				.Configure<AppConfig>()
+				.Send<LaunchEvent>(default)
+			;
 	}
 }
-

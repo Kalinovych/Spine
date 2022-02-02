@@ -11,7 +11,7 @@
 	}
 
 	public static class ControllerHubExtension {
-		public static Context InstallControllerHub(this Context context) {
+		public static Context WithControllerHub(this Context context) {
 			context.injector.MapSingleton( new ControllerHub( context ) );
 			return context;
 		}

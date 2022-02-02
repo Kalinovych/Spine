@@ -6,7 +6,7 @@ using Spine.Experiments;
 using Spine.Integration;
 using UnityEngine.UI;
 
-readonly struct ContextConfig : IContextConfig {
+readonly struct AppConfig : IContextConfig {
 	public void Configure(Context context) {
 		context
 			.ConfigureModel( ConfigureModel )
