@@ -1,11 +1,15 @@
 ﻿using Spine.Integration;
 using UnityEngine;
 
-namespace Spine {
+namespace Spine.Experimental {
 	[CreateAssetMenu]
 	public class ScriptableContext : ScriptableObject {
 		public readonly Context context = new Context();
 
-		public ScriptableModelBase[] models;
+		public ScriptableModel[] models;
+
+		void Awake() {
+			Debug.Log( "[ScriptableContext] Awake" );
+		}
 	}
 }

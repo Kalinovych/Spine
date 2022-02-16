@@ -2,7 +2,7 @@
 using App.Commands;
 using App.Models;
 using Spine;
-using Spine.Experiments;
+using Spine.Experimental;
 using Spine.Integration;
 using UnityEngine.UI;
 

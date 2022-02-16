@@ -1,5 +1,5 @@
 ﻿using System;
-using Spine.Experiments;
+using Spine.Experimental;
 using UnityEditor;
 using UnityEngine;
 

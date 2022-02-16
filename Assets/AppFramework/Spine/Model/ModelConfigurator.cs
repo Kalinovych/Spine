@@ -1,6 +1,6 @@
 ﻿using Spine.DI;
 
-namespace Spine.Experiments {
+namespace Spine.Experimental {
 	public interface IModelConfigurator {
 		IModelConfigurator Add<TDependency, TImplementation>() where TImplementation : TDependency, new();
 		IModelConfigurator Add<TDependency>() where TDependency : new();

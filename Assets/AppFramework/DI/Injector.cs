@@ -103,7 +103,7 @@ namespace Spine.DI {
 
 			public object Get() {
 				if (instance is null) {
-					Debug.Log( $"[SingletonProvider<{typeof(TDependency)}>] get-init" );
+					Debug.Log( $"[SingletonProvider<{typeof(TDependency)}>] Get, create instance" );
 					instance = new TDependency();
 					injector.InjectIn( instance );
 				}

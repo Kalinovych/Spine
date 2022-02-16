@@ -85,19 +85,6 @@ namespace Spine.Signals {
 
 			return result;
 		}
-		
-		/*internal Channel GetOrCreateChannel(Type type) {
-			IChannel result;
-
-			if (channelMap.ContainsKey( type )) {
-				result = channelMap[type];
-			}
-			else {
-				channelMap[type] = result = new Channel();
-			}
-
-			return (Channel)result;
-		}*/
 	}
 
 	/***
@@ -171,68 +158,4 @@ namespace Spine.Signals {
 			}
 		}
 	}
-
-	/*internal class Channel : IChannel {
-		private readonly HashSet<Receiver> _receivers = new HashSet<Receiver>();
-
-		public void Add(Receiver receiver) {
-			_receivers.Add( receiver );
-		}
-
-		public void Add(Action handler) {
-			
-		}
-
-		public void Remove(Receiver receiver) {
-			_receivers.Remove( receiver );
-		}
-
-		public void Dispatch<T>(T signal) {
-			// take a snapshot of the current receivers
-			var receivers = _receivers.ToArray();
-			foreach (var receiver in receivers) {
-				// no second chance to get here
-				if (receiver.once) {
-					// remove receiver from the original list
-					_receivers.Remove( receiver );
-				}
-
-				// handle it, baby
-				receiver.Handle( signal );
-			}
-		}
-	}*/
-
-	/*internal readonly struct Receiver : IEquatable<Receiver> {
-		public readonly Action<TSignal> callback;
-		public readonly bool once;
-
-		public Receiver(Action<TSignal> callback) : this() {
-			this.callback = callback;
-		}
-
-		public Receiver(Action<TSignal> callback, bool once) : this() {
-			this.callback = callback;
-			this.once = once;
-		}
-
-		public void Handle(TSignal signal) {
-			callback( signal );
-		}
-
-		public bool Equals(Receiver other) {
-			return Equals( callback, other.callback ) && once == other.once;
-		}
-
-		public override bool Equals(object obj) {
-			if (obj is null) return false;
-			return (obj is Receiver other) && Equals( other );
-		}
-
-		public override int GetHashCode() {
-			unchecked {
-				return ((callback != null ? callback.GetHashCode() : 0) * 397) ^ once.GetHashCode();
-			}
-		}
-	}*/
 }

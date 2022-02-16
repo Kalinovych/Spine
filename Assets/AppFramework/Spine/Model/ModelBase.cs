@@ -1,5 +1,4 @@
-﻿using System;
-using Spine.DI;
+﻿using Spine.DI;
 using Spine.Signals;
 
 namespace Spine {
@@ -9,6 +8,4 @@ namespace Spine {
 
 		protected void Send<T>(T signal) => eventHub.Send( signal );
 	}
-	
-	
 }

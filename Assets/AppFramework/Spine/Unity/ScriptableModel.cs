@@ -3,7 +3,7 @@ using Spine.Signals;
 using UnityEngine;
 
 namespace Spine.Integration {
-	public class ScriptableModelBase : ScriptableObject {
+	public abstract class ScriptableModel : ScriptableObject {
 		[Inject]
 		protected readonly EventHub eventHub;
 

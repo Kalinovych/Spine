@@ -1,4 +1,4 @@
-﻿namespace Spine.AppFramework.Spine {
+﻿namespace Spine {
 	public class Spine {
 		// Context management
 	}
