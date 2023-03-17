@@ -13,7 +13,7 @@ namespace App {
 
 		public void SetGallery(Gallery gallery) {
 			CurrentGallery = gallery;
-			Send( new GalleryChanged() );
+			Emit( new GalleryChanged() );
 		}
 	}
 
