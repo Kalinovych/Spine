@@ -58,32 +58,36 @@ namespace Spine.Signals {
 	 */
 	internal class ChannelMap {
 		private readonly Dictionary<Type, IChannel> channelMap = new Dictionary<Type, IChannel>();
+		private readonly object lockObject = new object();
 
 		internal void Clear() {
-			channelMap.Clear();
+			lock (lockObject) {
+				channelMap.Clear();
+			}
 		}
 
 		internal Channel<TSignal> GetChannel<TSignal>() {
-			return (Channel<TSignal>) GetChannel(typeof(TSignal));
-		}
-		
-		internal IChannel GetChannel(Type type) {
-			return channelMap.ContainsKey( type ) ? channelMap[type] : null;
-		}
+            lock (lockObject) {
+                if (channelMap.TryGetValue(typeof(TSignal), out object channel)) {
+                    return (Channel<TSignal>)channel;
+                }
+
+                return null;
+            }
+        }
 
 		internal Channel<TSignal> GetOrCreateChannel<TSignal>() {
-			Channel<TSignal> result;
+			lock (lockObject)
+            {
+                if (channelMap.TryGetValue(typeof(TSignal), out object channel))
+                {
+                    return (Channel<TSignal>)channel;
+                }
 
-			var type = typeof(TSignal);
-
-			if (channelMap.ContainsKey( type )) {
-				result = (Channel<TSignal>) channelMap[type];
-			}
-			else {
-				channelMap[type] = result = new Channel<TSignal>();
-			}
-
-			return result;
+                var newChannel = new Channel<TSignal>();
+                channelMap.Add(typeof(TSignal), newChannel);
+                return newChannel;
+            }
 		}
 	}
 
