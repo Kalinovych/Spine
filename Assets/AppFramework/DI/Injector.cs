@@ -269,7 +269,7 @@ namespace Spine.DI {
 	/// <summary>
 	/// Provides an information about Type injection points
 	/// </summary>
-	public static sealed class TypeDescriber // : ITypeDescriber
+	public static class TypeDescriber // : ITypeDescriber
 	{
 		delegate R FeatureDescriber<out R>(Type type);
 
@@ -375,7 +375,7 @@ namespace Spine.DI {
 	}
 
 	// Field
-	readonly sealed struct FieldInjectionPoint : IInjectionPoint {
+	readonly struct FieldInjectionPoint : IInjectionPoint {
 		public bool isRequired { get; }
 
 		public Type TargetType => field.FieldType;
@@ -396,7 +396,7 @@ namespace Spine.DI {
 
 
 	// Property
-	readonly sealed struct PropertyInjectionPoint : IInjectionPoint {
+	readonly struct PropertyInjectionPoint : IInjectionPoint {
 		public bool isRequired { get; }
 
 		public Type TargetType => property.PropertyType;

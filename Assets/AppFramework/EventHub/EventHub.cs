@@ -58,7 +58,7 @@ namespace Spine.Signals {
 	 */
 	internal class ChannelMap {
 		private readonly Dictionary<Type, IChannel> channelMap = new Dictionary<Type, IChannel>();
-		private readonly object lockObject = new object();
+		private readonly object lockObject = new();
 
 		internal void Clear() {
 			lock (lockObject) {
@@ -68,7 +68,7 @@ namespace Spine.Signals {
 
 		internal Channel<TSignal> GetChannel<TSignal>() {
             lock (lockObject) {
-                if (channelMap.TryGetValue(typeof(TSignal), out object channel)) {
+                if (channelMap.TryGetValue(typeof(TSignal), out IChannel channel)) {
                     return (Channel<TSignal>)channel;
                 }
 
@@ -79,7 +79,7 @@ namespace Spine.Signals {
 		internal Channel<TSignal> GetOrCreateChannel<TSignal>() {
 			lock (lockObject)
             {
-                if (channelMap.TryGetValue(typeof(TSignal), out object channel))
+                if (channelMap.TryGetValue(typeof(TSignal), out IChannel channel))
                 {
                     return (Channel<TSignal>)channel;
                 }
