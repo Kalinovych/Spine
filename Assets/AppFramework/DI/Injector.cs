@@ -202,7 +202,7 @@ namespace Spine.DI {
 				this.value = value;
 			}
 
-			public T Resolve<T>() where T : struct {
+			public T? Resolve<T>() where T : struct {
 				Log( $"Injection<{typeof(TValue)}>.Resolve<{typeof(T)}>" );
 
 				//return injector.Resolve<T>();
@@ -249,7 +249,7 @@ namespace Spine.DI {
 	/// <summary>
 	/// Dependency Storage and Provider
 	/// </summary>
-	class DependencyRepository // : IDependencyStorage, IDependencyProvider
+	sealed class DependencyRepository // : IDependencyStorage, IDependencyProvider
 	{
 		public void Put(Type key, object item) {
 			if (items.ContainsKey( key )) {
@@ -269,7 +269,7 @@ namespace Spine.DI {
 	/// <summary>
 	/// Provides an information about Type injection points
 	/// </summary>
-	public static class TypeDescriber // : ITypeDescriber
+	public static sealed class TypeDescriber // : ITypeDescriber
 	{
 		delegate R FeatureDescriber<out R>(Type type);
 
@@ -375,7 +375,7 @@ namespace Spine.DI {
 	}
 
 	// Field
-	readonly struct FieldInjectionPoint : IInjectionPoint {
+	readonly sealed struct FieldInjectionPoint : IInjectionPoint {
 		public bool isRequired { get; }
 
 		public Type TargetType => field.FieldType;
@@ -396,7 +396,7 @@ namespace Spine.DI {
 
 
 	// Property
-	readonly struct PropertyInjectionPoint : IInjectionPoint {
+	readonly sealed struct PropertyInjectionPoint : IInjectionPoint {
 		public bool isRequired { get; }
 
 		public Type TargetType => property.PropertyType;
