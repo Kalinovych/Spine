@@ -19,23 +19,20 @@ namespace Spine.DI {
 		}
 	}
 
-	/***
-	 * Todo: implement injections via ExpressionTrees
-	 */
-
 	/// <summary>
 	/// Injector simple implementation
 	/// </summary>
 	public class Injector {
-		readonly DependencyRepository repository = new DependencyRepository();
+		private readonly DependencyRepository repository = new();
 
 		public delegate object DependencyProviderDelegate(object target);
 
-		readonly Dictionary<Type, DependencyProviderDelegate> mappings = new Dictionary<Type, DependencyProviderDelegate>();
+		private readonly Dictionary<Type, DependencyProviderDelegate> mappings = new();
 
 		[Conditional("LOG_VERBOSE")]
-		static void Log(object msg) => Debug.Log( $"[{nameof(Injector)}] {msg}" );
-		static void LogError(object msg) => Debug.LogError( $"[{nameof(Injector)}] {msg}" );
+		private static void Log(object msg) => Debug.Log( $"[{nameof(Injector)}] {msg}" );
+
+		private static void LogError(object msg) => Debug.LogError( $"[{nameof(Injector)}] {msg}" );
 
 		public Injector() {
 			Log( "→ Injector ←" );
@@ -72,15 +69,15 @@ namespace Spine.DI {
 		}
 
 		// V3 //
-		interface IDependencyProvider {
+		internal interface IDependencyProvider {
 			object Get();
 		}
 
-		struct InstanceProvider<TDependency> : IDependencyProvider {
-			readonly TDependency dependency;
-			readonly Injector injector;
+		internal struct InstanceProvider<TDependency> : IDependencyProvider {
+			private readonly TDependency dependency;
+			private readonly Injector injector;
 
-			bool initialized;
+			private bool initialized;
 
 			public InstanceProvider(TDependency dependency, Injector injector) {
 				this.dependency = dependency;
@@ -97,13 +94,13 @@ namespace Spine.DI {
 			}
 		}
 		
-		struct SingletonProvider<TDependency> : IDependencyProvider where TDependency : new() {
+		internal struct SingletonProvider<TDependency> : IDependencyProvider where TDependency : new() {
 			public Injector injector;
-			TDependency instance;
+			private TDependency instance;
 
 			public object Get() {
 				if (instance is null) {
-					Debug.Log( $"[SingletonProvider<{typeof(TDependency)}>] Get, create instance" );
+					Debug.Log( $"[SingletonProvider<{nameof(TDependency)}>] Get, create instance" );
 					instance = new TDependency();
 					injector.InjectIn( instance );
 				}
@@ -111,20 +108,20 @@ namespace Spine.DI {
 			}
 		}
 
-		readonly Dictionary<Type, IDependencyProvider> providers = new Dictionary<Type, IDependencyProvider>();
+		private readonly Dictionary<Type, IDependencyProvider> providers = new();
 
 		public void Add<TDependency>(TDependency dependency) {
-			Log( $"Add<{typeof(TDependency)}>({dependency})" );
+			Log( $"Add<{nameof(TDependency)}>({dependency})" );
 			providers.Add( typeof(TDependency), new InstanceProvider<TDependency>( dependency, this ) );
 		}
 
 		public void Add<TType, TImplementation>() where TImplementation : TType, new() {
-			Log( $"Add<{typeof(TType)},{typeof(TImplementation)}>" );
+			Log( $"Add<{nameof(TType)},{typeof(TImplementation)}>" );
 			providers.Add( typeof(TType), new SingletonProvider<TImplementation> {injector = this} );
 		}
 
 		public void Add<TDependency>() where TDependency : new() {
-			Log( $"Add<{typeof(TDependency)}>" );
+			Log( $"Add<{nameof(TDependency)}>" );
 			Add<TDependency, TDependency>();
 		}
 
@@ -175,12 +172,12 @@ namespace Spine.DI {
 				}
 
 				Log( $"\tinject: {target} ← {dependency}" );
-				injection.ApplyTo( target, dependency );
+				injection.Inject( target, dependency );
 			}
 		}
 
 		public T Resolve<T>() where T : new() {
-			Log( $"Resolve<{typeof(T)}>" );
+			Log( $"Resolve<{nameof(T)}>" );
 			
 			object targetBoxed = new T();
 
@@ -189,59 +186,10 @@ namespace Spine.DI {
 			return (T)targetBoxed;
 		}
 
-		public Injection<T> With<T>(T dependency) {
-			return new Injection<T>( this, dependency );
-		}
-
-		public readonly struct Injection<TValue> {
-			readonly Injector injector;
-			readonly TValue value;
-
-			public Injection(Injector injector, TValue value) {
-				this.injector = injector;
-				this.value = value;
-			}
-
-			public T? Resolve<T>() where T : struct {
-				Log( $"Injection<{typeof(TValue)}>.Resolve<{typeof(T)}>" );
-
-				//return injector.Resolve<T>();
-
-				object target = default(T);
-
-				var injectionPoints = TypeDescriber.GetInjectionPoints( target.GetType() );
-
-				foreach (var injection in injectionPoints) {
-					Log( $"\tpoint: {injection.Name} : {injection.TargetType}" );
-					object dependency = value;
-					
-					dependency ??= injector.repository.Retrieve( injection.TargetType );
-
-					if (dependency == null && injector.providers.TryGetValue( injection.TargetType, out var provider )) {
-						dependency = provider.Get();
-					}
-
-					if (dependency == null && injector.mappings.TryGetValue( injection.TargetType, out var providerAction )) {
-						dependency = providerAction( target );
-					}
-
-					if (dependency == null && injection.isRequired) {
-						LogError( $">> \t{injection.Name} = <i>[missing required reference]</i>({injection.TargetType.Name})" );
-						continue;
-					}
-
-					Log( $"\tinject: {target} ← {dependency}" );
-					injection.ApplyTo( target, dependency );
-				}
-
-				return (T)target;
-			}
-		}
-
 		public void Clear(object target) {
 			var injectionPoints = TypeDescriber.GetInjectionPoints( target.GetType() );
 			foreach (var injection in injectionPoints) {
-				injection.ApplyTo( target, null );
+				injection.Inject( target, null );
 			}
 		}
 	}
@@ -249,8 +197,10 @@ namespace Spine.DI {
 	/// <summary>
 	/// Dependency Storage and Provider
 	/// </summary>
-	sealed class DependencyRepository // : IDependencyStorage, IDependencyProvider
+	internal sealed class DependencyRepository // : IDependencyStorage, IDependencyProvider
 	{
+		private readonly Dictionary<Type, object> items = new();
+		
 		public void Put(Type key, object item) {
 			if (items.ContainsKey( key )) {
 				Debug.LogError( $"Two or more references of the same type <b>{key}</b> detected!" );
@@ -262,8 +212,6 @@ namespace Spine.DI {
 		public object Retrieve(Type key) {
 			return items.TryGetValue( key, out var item ) ? item : null;
 		}
-
-		readonly Dictionary<Type, object> items = new Dictionary<Type, object>();
 	}
 
 	/// <summary>
@@ -273,7 +221,8 @@ namespace Spine.DI {
 	{
 		delegate R FeatureDescriber<out R>(Type type);
 
-		static List<FeatureDescriber<ICollection<IInjectionPoint>>> describers = new List<FeatureDescriber<ICollection<IInjectionPoint>>>();
+		private static readonly List<FeatureDescriber<ICollection<IInjectionPoint>>> describers = new();
+		private static readonly Dictionary<Type, IEnumerable<IInjectionPoint>> injectionPointsCache = new();
 
 		public static void Example(Type targetType) {
 			ICollection<IInjectionPoint> FieldDescriber(Type type) {
@@ -302,18 +251,14 @@ namespace Spine.DI {
 
 			// collect all the fields marked by the Inject attribute
 			var diPoints = CollectInjectionPoints( targetType );
-			//var diPoints = CollectInjectFields(targetType);
-
-			// Inject into setters
-			//diPoints.AddRange(CollectInjectProperties(targetType));
-
+			
 			// cache it
 			injectionPointsCache[targetType] = diPoints;
 
 			return diPoints;
 		}
 
-		static List<IInjectionPoint> CollectInjectionPoints(Type targetType) {
+		private static List<IInjectionPoint> CollectInjectionPoints(Type targetType) {
 			var result = new List<IInjectionPoint>();
 			var members = targetType.GetMembers( BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance );
 			foreach (var member in members) {
@@ -334,7 +279,7 @@ namespace Spine.DI {
 			return result;
 		}
 
-		static List<IInjectionPoint> CollectInjectFields(Type targetType) {
+		private static List<IInjectionPoint> CollectInjectFields(Type targetType) {
 			var result = new List<IInjectionPoint>();
 			var fields = targetType.GetFields( BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance );
 			foreach (var field in fields) {
@@ -346,7 +291,7 @@ namespace Spine.DI {
 			return result;
 		}
 
-		static List<IInjectionPoint> CollectInjectProperties(Type targetType) {
+		private static List<IInjectionPoint> CollectInjectProperties(Type targetType) {
 			var result = new List<IInjectionPoint>();
 			var properties = targetType.GetProperties( BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance );
 			foreach (var property in properties) {
@@ -359,8 +304,6 @@ namespace Spine.DI {
 
 			return result;
 		}
-
-		static readonly Dictionary<Type, IEnumerable<IInjectionPoint>> injectionPointsCache = new Dictionary<Type, IEnumerable<IInjectionPoint>>();
 	}
 
 	// DIPoint
@@ -371,11 +314,11 @@ namespace Spine.DI {
 
 		Type TargetType { get; }
 
-		void ApplyTo(object target, object value);
+		void Inject(object target, object value);
 	}
 
 	// Field
-	readonly struct FieldInjectionPoint : IInjectionPoint {
+	internal readonly struct FieldInjectionPoint : IInjectionPoint {
 		public bool isRequired { get; }
 
 		public Type TargetType => field.FieldType;
@@ -387,8 +330,14 @@ namespace Spine.DI {
 			this.isRequired = isRequired;
 		}
 
-		public void ApplyTo(object target, object value) {
-			field.SetValue( target, value );
+		public void Inject(object target, object value) {
+			object finalValue = value;
+			
+			if (!field.FieldType.IsInstanceOfType(value)) {
+				finalValue = Convert.ChangeType(value, field.FieldType);
+			}
+			
+			field.SetValue(target, finalValue);
 		}
 
 		private readonly FieldInfo field;
@@ -396,7 +345,7 @@ namespace Spine.DI {
 
 
 	// Property
-	readonly struct PropertyInjectionPoint : IInjectionPoint {
+	internal readonly struct PropertyInjectionPoint : IInjectionPoint {
 		public bool isRequired { get; }
 
 		public Type TargetType => property.PropertyType;
@@ -408,8 +357,14 @@ namespace Spine.DI {
 			this.isRequired = isRequired;
 		}
 
-		public void ApplyTo(object target, object value) {
-			property.SetValue( target, value );
+		public void Inject(object target, object value) {
+			object finalValue = value;
+
+			if (!property.PropertyType.IsInstanceOfType(value)) {
+				finalValue = Convert.ChangeType(value, property.PropertyType);
+			}
+
+			property.SetValue(target, finalValue);
 		}
 
 		private readonly PropertyInfo property;
