@@ -109,27 +109,6 @@ public class Injector_Test {
 
 	#endregion V3
 
-	[Test]
-	public void Run() {
-		Log( "Test Run!" );
-
-		TypeDescriber.Example( typeof(InjectionTarget) );
-
-		Assert.NotNull( injector );
-
-		var subject = new Subject();
-		var id = 1;
-
-		injector.AutoMap( subject, id );
-
-		var target = new InjectionTarget();
-
-		injector.InjectIn( target );
-
-		Assert.AreEqual( subject, target.subject );
-		Assert.AreEqual( id, target.id );
-	}
-
 	/*[Test]
 	public void Performance()
 	{
@@ -210,6 +189,26 @@ public class Injector_Test {
 
 		var target = new PropertyInjectTarget();
 		injector.InjectIn( target );
+
+		Assert.AreEqual( subject, target.Subject );
+	}
+
+	class ConstructorInjectTarget {
+		public Subject Subject { get; private set; }
+
+		[Inject]
+		public ConstructorInjectTarget(Subject subject) {
+			Subject = subject;
+		}
+	};
+	
+	[Test]
+	public void InjectIntoConstructor_Passes() {
+		var subject = new Subject();
+
+		injector.AutoMap( subject );
+
+		var target = injector.Resolve<ConstructorInjectTarget>();
 
 		Assert.AreEqual( subject, target.Subject );
 	}

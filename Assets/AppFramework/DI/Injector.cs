@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using JetBrains.Annotations;
 using Debug = UnityEngine.Debug;
@@ -145,6 +146,18 @@ namespace Spine.DI {
 			return default;
 		}
 
+		public object Retrieve(Type type) {
+			if (providers.TryGetValue(type, out var dependencyProvider)) {
+				return dependencyProvider.Get();
+			}
+
+			if (mappings.TryGetValue(type, out var dependencyProviderAction)) {
+				return dependencyProviderAction(null);
+			}
+
+			return null;
+		}
+
 		/// <summary>
 		/// Resolve target dependencies marked with Inject Attribute
 		/// </summary>
@@ -176,10 +189,21 @@ namespace Spine.DI {
 			}
 		}
 
-		public T Resolve<T>() where T : new() {
-			Log( $"Resolve<{nameof(T)}>" );
+		public T Resolve<T>() {
+			Log( $"Resolve<{typeof(T)}>" );
+
+			var targetType = typeof(T);
+			var injectionPoint = TypeDescriber.GetConstructorInjectionPoints(targetType).FirstOrDefault();
 			
-			object targetBoxed = new T();
+
+			object targetBoxed = default(T);
+
+			if (injectionPoint is ConstructorInjectionPoint constructorInjectionPoint) {
+				targetBoxed = Activator.CreateInstance(typeof(T), constructorInjectionPoint.Parameters.Select( p => repository.Retrieve( p.ParameterType ) ).ToArray());
+			}
+
+			// If there's no constructor injection point, use the default constructor
+			targetBoxed ??= Activator.CreateInstance<T>();
 
 			InjectIn( targetBoxed );
 
@@ -219,27 +243,8 @@ namespace Spine.DI {
 	/// </summary>
 	public static class TypeDescriber // : ITypeDescriber
 	{
-		delegate R FeatureDescriber<out R>(Type type);
-
-		private static readonly List<FeatureDescriber<ICollection<IInjectionPoint>>> describers = new();
 		private static readonly Dictionary<Type, IEnumerable<IInjectionPoint>> injectionPointsCache = new();
-
-		public static void Example(Type targetType) {
-			ICollection<IInjectionPoint> FieldDescriber(Type type) {
-				Debug.Log( $">> {nameof(FieldDescriber)} exec" );
-				return new List<IInjectionPoint>() { new FieldInjectionPoint() };
-			}
-
-			ICollection<IInjectionPoint> SetterDescriber(Type type) {
-				Debug.Log( $">> {nameof(SetterDescriber)} exec" );
-				return new List<IInjectionPoint>();
-			}
-
-			describers.Add( CollectInjectFields );
-			describers.Add( CollectInjectProperties );
-
-			describers.ForEach( d => Debug.Log( $">> describe: {d( targetType ).Count}" ) );
-		}
+		private static readonly Dictionary<Type, IEnumerable<IInjectionPoint>> cInjectionPointsCache = new();
 
 		public static IEnumerable<IInjectionPoint> GetInjectionPoints(Type targetType) {
 			// try to restore from the cache
@@ -255,6 +260,21 @@ namespace Spine.DI {
 			// cache it
 			injectionPointsCache[targetType] = diPoints;
 
+			return diPoints;
+		}
+		
+		public static IEnumerable<IInjectionPoint> GetConstructorInjectionPoints(Type targetType) {
+			// try to restore from the cache
+			if (cInjectionPointsCache.TryGetValue( targetType, out var cached )) {
+				return cached;
+			}
+			
+			// collect all the fields marked by the Inject attribute
+			var diPoints = CollectConstructorInjectionPoints( targetType );
+			
+			// cache it
+			cInjectionPointsCache[targetType] = diPoints;
+			
 			return diPoints;
 		}
 
@@ -279,29 +299,17 @@ namespace Spine.DI {
 			return result;
 		}
 
-		private static List<IInjectionPoint> CollectInjectFields(Type targetType) {
+		private static List<IInjectionPoint> CollectConstructorInjectionPoints(Type targetType) {
 			var result = new List<IInjectionPoint>();
-			var fields = targetType.GetFields( BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance );
-			foreach (var field in fields) {
-				var attribute = (InjectAttribute)Attribute.GetCustomAttribute( field, typeof(InjectAttribute), true );
-				if (attribute != null)
-					result.Add( new FieldInjectionPoint( field, true ) );
+
+			// Add constructor injection points
+			var constructors = targetType.GetConstructors();
+			foreach (var constructor in constructors) {
+				var attribute = (InjectAttribute)Attribute.GetCustomAttribute(constructor, typeof(InjectAttribute), true);
+				var isRequired = attribute is { isOptional: true };
+				result.Add(new ConstructorInjectionPoint(constructor, isRequired));
 			}
-
-			return result;
-		}
-
-		private static List<IInjectionPoint> CollectInjectProperties(Type targetType) {
-			var result = new List<IInjectionPoint>();
-			var properties = targetType.GetProperties( BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance );
-			foreach (var property in properties) {
-				if (property.CanWrite) {
-					var attribute = (InjectAttribute)Attribute.GetCustomAttribute( property, typeof(InjectAttribute), true );
-					if (attribute != null)
-						result.Add( new PropertyInjectionPoint( property, !attribute.isOptional ) );
-				}
-			}
-
+			
 			return result;
 		}
 	}
@@ -319,6 +327,8 @@ namespace Spine.DI {
 
 	// Field
 	internal readonly struct FieldInjectionPoint : IInjectionPoint {
+		private readonly FieldInfo field;
+		
 		public bool isRequired { get; }
 
 		public Type TargetType => field.FieldType;
@@ -339,13 +349,13 @@ namespace Spine.DI {
 			
 			field.SetValue(target, finalValue);
 		}
-
-		private readonly FieldInfo field;
 	}
 
 
 	// Property
 	internal readonly struct PropertyInjectionPoint : IInjectionPoint {
+		private readonly PropertyInfo property;
+		
 		public bool isRequired { get; }
 
 		public Type TargetType => property.PropertyType;
@@ -366,7 +376,26 @@ namespace Spine.DI {
 
 			property.SetValue(target, finalValue);
 		}
+	}
 
-		private readonly PropertyInfo property;
+	internal readonly struct ConstructorInjectionPoint : IInjectionPoint {
+		private readonly ConstructorInfo constructor;
+		
+		public bool isRequired { get; }
+
+		public Type TargetType => constructor.DeclaringType;
+
+		public string Name => constructor.Name;
+		
+		public ParameterInfo[] Parameters => constructor.GetParameters();
+
+		public ConstructorInjectionPoint(ConstructorInfo constructor, bool isRequired) {
+			this.constructor = constructor;
+			this.isRequired = isRequired;
+		}
+
+		public void Inject(object target, object value) {
+			
+		}
 	}
 }
