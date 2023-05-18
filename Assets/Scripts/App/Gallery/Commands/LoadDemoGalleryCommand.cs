@@ -4,17 +4,14 @@ using Spine.Signals;
 using UnityEngine;
 
 namespace App {
-	public struct LoadDemoGalleryCommand : ICommand {
-		[Inject] GalleryModel model;
-
+	public struct LoadDemoGalleryCommand : ICommand<OpenDemoGallery> {
 		[Inject] EventHub eventHub;
 
-		public void Execute() {
-			model.SetGallery( DemoGalleryProvider() );
-			eventHub.Send( new OpenGallery( DemoGalleryProvider() ) );
+		public void Execute(OpenDemoGallery _) {
+			eventHub.Send( new OpenGallery( CreateDemoGallery() ) );
 		}
 
-		Gallery DemoGalleryProvider() {
+		Gallery CreateDemoGallery() {
 			const int ItemCount = 12;
 			var items = new GalleryItem[ItemCount];
 			for (int i = 0; i < ItemCount; i++) {

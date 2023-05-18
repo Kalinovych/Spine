@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent( typeof(Button) )]
-public class OpenButtonMediator : Mediator {
+public class OpenButtonController : ControllerBase {
 	public void OnClick() {
 		Send( new OpenDemoGallery() );
 	}

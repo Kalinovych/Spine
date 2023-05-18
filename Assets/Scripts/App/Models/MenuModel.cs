@@ -11,7 +11,7 @@ namespace App.Models {
 
                 screenIndex = value;
 
-                Send(new ScreenChanged(screenIndex));
+                Emit(new ScreenChanged(screenIndex));
             }
         }
 

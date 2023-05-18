@@ -11,19 +11,13 @@ namespace Spine {
 		static void Log(object msg) => Debug.Log( $"[Context] {msg}" );
 
 		public Context() {
+			Log( "Context" );
 			injector.Add( this );
 			injector.Add( injector );
 		}
 	}
 
 	public interface IContextConfig {
-		public void Configure();
-	}
-
-	public static class ContextConfigurator {
-		public static Context With<TConfig>(this Context context) where TConfig : struct, IContextConfig {
-			context.Resolve<TConfig>().Configure();
-			return context;
-		}
+		public void Configure(Context context);
 	}
 }

@@ -1,12 +1,11 @@
 ﻿using Spine;
-using Spine.DI;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-readonly struct StartupCmd : ICommand {
-	[Inject]
-	readonly LaunchEvent @event;
+readonly struct StartupCmd : ICommand<LaunchEvent> {
+	public void Execute(LaunchEvent launch) {
+		Debug.Log( $"Startup: {launch.msg}" );
 
-	public void Execute() {
-		Debug.Log( $"Startup: {@event.msg}" );
+		SceneManager.LoadSceneAsync( "Scenes/Gallery", LoadSceneMode.Additive );
 	}
 }

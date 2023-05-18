@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace App.Mediators {
 	[RequireComponent( typeof(Button) )]
-	public class CloseButtonMediator : Mediator {
+	public class CloseButtonController : ControllerBase {
 		public void OnClick() {
 			Send( new ClearGallery() );
 		}

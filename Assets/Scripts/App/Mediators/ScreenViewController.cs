@@ -3,7 +3,7 @@ using Spine;
 using Spine.DI;
 using UnityEngine;
 
-public class ScreenViewMediator : Mediator {
+public class ScreenViewController : ControllerBase {
 	public MeshRenderer screenMesh;
 
 	[Inject]
@@ -12,7 +12,7 @@ public class ScreenViewMediator : Mediator {
 	readonly Color[] colors = { Color.black, Color.white, Color.red, Color.green, Color.blue, };
 
 	void UpdateView() {
-		print( $"[{nameof(ScreenViewMediator)}] UpdateView() > menuModel.ScreenIndex: {menuModel.ScreenIndex}" );
+		print( $"[{nameof(ScreenViewController)}] UpdateView() > menuModel.ScreenIndex: {menuModel.ScreenIndex}" );
 		var material = screenMesh.material;
 		material.color = colors[menuModel.ScreenIndex];
 	}

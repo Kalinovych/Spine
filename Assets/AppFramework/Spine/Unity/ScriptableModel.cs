@@ -1,8 +1,9 @@
 ﻿using Spine.DI;
 using Spine.Signals;
+using UnityEngine;
 
-namespace Spine {
-	public class ModelBase {
+namespace Spine.Integration {
+	public abstract class ScriptableModel : ScriptableObject {
 		[Inject]
 		protected readonly EventHub eventHub;
 

@@ -10,6 +10,14 @@ namespace Spine.Signals {
 			AddReceiver( handler, once: false );
 		}
 
+		public void On<T>(Type eventType, Action<T> handler) {
+			if (typeof(T) != eventType) {
+				throw new ArgumentException($"Generic type {{typeof(T)}} should match event type {eventType}");
+			}
+
+			channelMap.GetOrCreateChannel<T>().Add( CreateReceiver( handler, false ) );
+		}
+
 		public void Once<T>(Action<T> handler) {
 			AddReceiver( handler, once: true );
 		}
@@ -49,48 +57,50 @@ namespace Spine.Signals {
 	 *
 	 */
 	internal class ChannelMap {
-		private readonly Dictionary<Type, Channel> channelMap = new Dictionary<Type, Channel>();
+		private readonly Dictionary<Type, IChannel> channelMap = new Dictionary<Type, IChannel>();
+		private readonly object lockObject = new();
 
 		internal void Clear() {
-			channelMap.Clear();
+			lock (lockObject) {
+				channelMap.Clear();
+			}
 		}
 
 		internal Channel<TSignal> GetChannel<TSignal>() {
-			var type = typeof(TSignal);
+            lock (lockObject) {
+                if (channelMap.TryGetValue(typeof(TSignal), out IChannel channel)) {
+                    return (Channel<TSignal>)channel;
+                }
 
-			if (channelMap.ContainsKey( type )) {
-				return (Channel<TSignal>) channelMap[type];
-			}
-
-			return null;
-		}
+                return null;
+            }
+        }
 
 		internal Channel<TSignal> GetOrCreateChannel<TSignal>() {
-			Channel<TSignal> result;
+			lock (lockObject)
+            {
+                if (channelMap.TryGetValue(typeof(TSignal), out IChannel channel))
+                {
+                    return (Channel<TSignal>)channel;
+                }
 
-			var type = typeof(TSignal);
-
-			if (channelMap.ContainsKey( type )) {
-				result = (Channel<TSignal>) channelMap[type];
-			}
-			else {
-				channelMap[type] = result = new Channel<TSignal>();
-			}
-
-			return result;
+                var newChannel = new Channel<TSignal>();
+                channelMap.Add(typeof(TSignal), newChannel);
+                return newChannel;
+            }
 		}
 	}
 
 	/***
 	 *
 	 */
-	internal class Channel {
+	internal interface IChannel {
 	}
 
 	/***
 	 *
 	 */
-	internal class Channel<TSignal> : Channel {
+	internal class Channel<TSignal> : IChannel {
 		private readonly HashSet<Receiver<TSignal>> _receivers = new HashSet<Receiver<TSignal>>();
 
 		public void Add(Receiver<TSignal> receiver) {
