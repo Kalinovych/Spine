@@ -46,16 +46,16 @@ namespace Spine.DI {
 		/// <param name="instances">A list of instances of unique types</param>
 		public void AutoMap(params object[] instances) {
 			foreach (var item in instances) {
-				repository.Put( item.GetType(), item );
+				repository.Set( item.GetType(), item );
 			}
 		}
 
 		public void MapSingleton<T>() where T : new() {
 			Map<T>( target => {
-				var result = repository.Retrieve( typeof(T) );
+				var result = repository.Get( typeof(T) );
 				if (result == null) {
 					result = Resolve<T>();
-					repository.Put( typeof(T), result );
+					repository.Set( typeof(T), result );
 				} else {
 					throw new Exception( $"Singleton<{typeof(T)}>: already mapped" );
 				}
@@ -172,7 +172,7 @@ namespace Spine.DI {
 
 			foreach (var injection in injectionPoints) {
 				Log( $"\tpoint: {injection.Name} : {injection.TargetType}" );
-				var dependency = repository.Retrieve( injection.TargetType );
+				var dependency = repository.Get( injection.TargetType );
 
 				if (dependency == null && providers.TryGetValue( injection.TargetType, out var provider )) {
 					dependency = provider.Get();
@@ -202,7 +202,7 @@ namespace Spine.DI {
 			object targetBoxed = default(T);
 
 			if (injectionPoint is ConstructorInjectionPoint constructorInjectionPoint) {
-				targetBoxed = Activator.CreateInstance(typeof(T), constructorInjectionPoint.Parameters.Select( p => repository.Retrieve( p.ParameterType ) ).ToArray());
+				targetBoxed = Activator.CreateInstance(typeof(T), constructorInjectionPoint.Parameters.Select( p => repository.Get( p.ParameterType ) ).ToArray());
 			}
 
 			// If there's no constructor injection point, use the default constructor
@@ -232,13 +232,13 @@ namespace Spine.DI {
 	internal sealed class DependencyRepository {
 		private readonly ConcurrentDictionary<Type, object> items = new();
     
-		public void Put(Type key, object item) {
+		public void Set(Type key, object item) {
 			if (!items.TryAdd(key, item)) {
 				Debug.LogError($"Two or more references of the same type <b>{key}</b> detected!");
 			}
 		}
 
-		public object Retrieve(Type key) {
+		public object Get(Type key) {
 			items.TryGetValue(key, out var value);
 			return value;
 		}
