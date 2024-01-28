@@ -1,5 +1,6 @@
 ﻿//#define LOG_VERBOSE
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -28,7 +29,7 @@ namespace Spine.DI {
 
 		public delegate object DependencyProviderDelegate(object target);
 
-		private readonly Dictionary<Type, DependencyProviderDelegate> mappings = new();
+		private readonly ConcurrentDictionary<Type, DependencyProviderDelegate> mappings = new();
 
 		[Conditional("LOG_VERBOSE")]
 		private static void Log(object msg) => Debug.Log( $"[{nameof(Injector)}] {msg}" );
@@ -64,11 +65,11 @@ namespace Spine.DI {
 		}
 
 		public void MapSingleton<T>(T instance) {
-			mappings.Add( typeof(T), target => instance );
+			mappings.TryAdd( typeof(T), target => instance );
 		}
 
 		public void Map<T>(DependencyProviderDelegate provider) {
-			mappings.Add( typeof(T), provider );
+			mappings.TryAdd( typeof(T), provider );
 		}
 
 		// V3 //
@@ -228,30 +229,29 @@ namespace Spine.DI {
 	/// <summary>
 	/// Dependency Storage and Provider
 	/// </summary>
-	internal sealed class DependencyRepository // : IDependencyStorage, IDependencyProvider
-	{
-		private readonly Dictionary<Type, object> items = new();
-		
+	internal sealed class DependencyRepository {
+		private readonly ConcurrentDictionary<Type, object> items = new();
+    
 		public void Put(Type key, object item) {
-			if (items.ContainsKey( key )) {
-				Debug.LogError( $"Two or more references of the same type <b>{key}</b> detected!" );
+			if (!items.TryAdd(key, item)) {
+				Debug.LogError($"Two or more references of the same type <b>{key}</b> detected!");
 			}
-
-			items.Add( key, item );
 		}
 
 		public object Retrieve(Type key) {
-			return items.GetValueOrDefault(key);
+			items.TryGetValue(key, out var value);
+			return value;
 		}
 	}
+
 
 	/// <summary>
 	/// Provides an information about Type injection points
 	/// </summary>
 	public static class TypeDescriber // : ITypeDescriber
 	{
-		private static readonly Dictionary<Type, IEnumerable<IInjectionPoint>> injectionPointsCache = new();
-		private static readonly Dictionary<Type, IEnumerable<IInjectionPoint>> cInjectionPointsCache = new();
+		private static readonly ConcurrentDictionary<Type, IEnumerable<IInjectionPoint>> injectionPointsCache = new();
+		private static readonly ConcurrentDictionary<Type, IEnumerable<IInjectionPoint>> cInjectionPointsCache = new();
 
 		public static IEnumerable<IInjectionPoint> GetInjectionPoints(Type targetType) {
 			// try to restore from the cache
