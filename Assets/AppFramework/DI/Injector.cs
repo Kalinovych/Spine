@@ -55,6 +55,8 @@ namespace Spine.DI {
 				if (result == null) {
 					result = Resolve<T>();
 					repository.Put( typeof(T), result );
+				} else {
+					throw new Exception( $"Singleton<{typeof(T)}>: already mapped" );
 				}
 
 				return result;
@@ -209,7 +211,12 @@ namespace Spine.DI {
 
 			return (T)targetBoxed;
 		}
-
+		
+		
+		/// <summary>
+		/// Clears all the dependencies marked with Inject Attribute
+		/// </summary>
+		/// <param name="target"></param>
 		public void Clear(object target) {
 			var injectionPoints = TypeDescriber.GetInjectionPoints( target.GetType() );
 			foreach (var injection in injectionPoints) {
@@ -234,7 +241,7 @@ namespace Spine.DI {
 		}
 
 		public object Retrieve(Type key) {
-			return items.TryGetValue( key, out var item ) ? item : null;
+			return items.GetValueOrDefault(key);
 		}
 	}
 
