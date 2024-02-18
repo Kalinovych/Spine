@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1764
     height: 1312
   m_ShowMode: 4
-  m_Title: Project
+  m_Title: Game
   m_RootView: {fileID: 9}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -74,7 +74,7 @@ MonoBehaviour:
   m_MinSize: {x: 100, y: 100}
   m_MaxSize: {x: 8096, y: 16192}
   vertical: 1
-  controlID: 84
+  controlID: 85
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -94,8 +94,8 @@ MonoBehaviour:
     y: 0
     width: 445
     height: 1262
-  m_MinSize: {x: 276, y: 71}
-  m_MaxSize: {x: 4001, y: 4021}
+  m_MinSize: {x: 275, y: 50}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 18}
   m_Panes:
   - {fileID: 18}
@@ -126,7 +126,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 0
-  controlID: 83
+  controlID: 132
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -174,8 +174,8 @@ MonoBehaviour:
     y: 691
     width: 996
     height: 571
-  m_MinSize: {x: 101, y: 121}
-  m_MaxSize: {x: 4001, y: 4021}
+  m_MinSize: {x: 100, y: 100}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 17}
   m_Panes:
   - {fileID: 17}
@@ -206,7 +206,7 @@ MonoBehaviour:
   m_MinSize: {x: 100, y: 100}
   m_MaxSize: {x: 8096, y: 16192}
   vertical: 1
-  controlID: 17
+  controlID: 18
 --- !u!114 &9
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -281,7 +281,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 100}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 82
+  controlID: 131
 --- !u!114 &12
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -349,8 +349,8 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 999
-    y: 927
+    x: 1210
+    y: 941
     width: 995
     height: 550
   m_SerializedDataModeController:
@@ -364,7 +364,7 @@ MonoBehaviour:
     m_SaveData: []
     m_OverlaysVisible: 1
   m_Spl:
-    ID: 260
+    ID: 3110
     splitterInitialOffset: 0
     currentActiveSplitter: -1
     realSizes:
@@ -396,7 +396,7 @@ MonoBehaviour:
       name: Spine
       fullName: Spine
       resultStatus: 1
-      duration: 0.0664047
+      duration: 0.0731733
       messages: 
       output: 
       stacktrace: 
@@ -412,7 +412,7 @@ MonoBehaviour:
       name: Spine.DI.Tests.dll
       fullName: D:/Dev/Unity/Spine/Library/ScriptAssemblies/Spine.DI.Tests.dll
       resultStatus: 1
-      duration: 0.0534579
+      duration: 0.0571608
       messages: 
       output: 
       stacktrace: 
@@ -428,7 +428,7 @@ MonoBehaviour:
       name: Injector_Test
       fullName: Injector_Test
       resultStatus: 1
-      duration: 0.050099
+      duration: 0.0524134
       messages: 
       output: 
       stacktrace: 
@@ -444,7 +444,7 @@ MonoBehaviour:
       name: AutoMapUniqueTypes_Passes
       fullName: Injector_Test.AutoMapUniqueTypes_Passes
       resultStatus: 1
-      duration: 0.0213652
+      duration: 0.0201184
       messages: 
       output: 
       stacktrace: 
@@ -461,7 +461,7 @@ MonoBehaviour:
       name: InectIntoProperty_Passes
       fullName: Injector_Test.InectIntoProperty_Passes
       resultStatus: 1
-      duration: 0.000427
+      duration: 0.0005605
       messages: 
       output: 
       stacktrace: 
@@ -478,7 +478,7 @@ MonoBehaviour:
       name: InjectIntoConstructor_Passes
       fullName: Injector_Test.InjectIntoConstructor_Passes
       resultStatus: 1
-      duration: 0.0008476
+      duration: 0.0009975
       messages: 
       output: 
       stacktrace: 
@@ -495,7 +495,7 @@ MonoBehaviour:
       name: InjectIntoPrivateField_Passes
       fullName: Injector_Test.InjectIntoPrivateField_Passes
       resultStatus: 1
-      duration: 0.0002611
+      duration: 0.0010983
       messages: 
       output: 
       stacktrace: 
@@ -512,7 +512,7 @@ MonoBehaviour:
       name: InjectStruct
       fullName: Injector_Test.InjectStruct
       resultStatus: 1
-      duration: 0.0004938
+      duration: 0.0005776
       messages: 
       output: 
       stacktrace: 
@@ -529,7 +529,7 @@ MonoBehaviour:
       name: MissingRequiredDependency_Throws
       fullName: Injector_Test.MissingRequiredDependency_Throws
       resultStatus: 1
-      duration: 0.0030866
+      duration: 0.0037024
       messages: 
       output: "[Injector] >> \tsubject = <i>[missing required reference]</i>(Subject)\r\n"
       stacktrace: 
@@ -546,7 +546,7 @@ MonoBehaviour:
       name: Resolve_DI_ByInterface_WithTheSameProvidedInstance
       fullName: Injector_Test.Resolve_DI_ByInterface_WithTheSameProvidedInstance
       resultStatus: 1
-      duration: 0.0025379
+      duration: 0.0027777
       messages: 
       output: 
       stacktrace: 
@@ -563,7 +563,7 @@ MonoBehaviour:
       name: Resolve_DI_MappedWithoutInstance
       fullName: Injector_Test.Resolve_DI_MappedWithoutInstance
       resultStatus: 1
-      duration: 0.0008843
+      duration: 0.0009603
       messages: 
       output: '[SingletonProvider<TDependency>] Get, create instance
 
@@ -582,7 +582,7 @@ MonoBehaviour:
       name: Resolve_DI_MappedWithTypes
       fullName: Injector_Test.Resolve_DI_MappedWithTypes
       resultStatus: 1
-      duration: 0.0011255
+      duration: 0.0010785
       messages: 
       output: '[SingletonProvider<TDependency>] Get, create instance
 
@@ -601,7 +601,7 @@ MonoBehaviour:
       name: Resolve_DI_MappedWithTypesAndInterface
       fullName: Injector_Test.Resolve_DI_MappedWithTypesAndInterface
       resultStatus: 1
-      duration: 0.0007778
+      duration: 0.0008441
       messages: 
       output: '[SingletonProvider<TDependency>] Get, create instance
 
@@ -620,7 +620,7 @@ MonoBehaviour:
       name: Resolve_DI_WithTheSameProvidedInstance
       fullName: Injector_Test.Resolve_DI_WithTheSameProvidedInstance
       resultStatus: 1
-      duration: 0.0002977
+      duration: 0.0003396
       messages: 
       output: 
       stacktrace: 
@@ -672,8 +672,8 @@ MonoBehaviour:
       uniqueId: '[Spine][suite]'
       name: Spine
       fullName: Spine
-      resultStatus: 0
-      duration: 0
+      resultStatus: 1
+      duration: 0.3176319
       messages: 
       output: 
       stacktrace: 
@@ -688,8 +688,8 @@ MonoBehaviour:
       uniqueId: '[EventHub.Tests][D:/Dev/Unity/Spine/Library/ScriptAssemblies/EventHub.Tests.dll][suite]'
       name: EventHub.Tests.dll
       fullName: D:/Dev/Unity/Spine/Library/ScriptAssemblies/EventHub.Tests.dll
-      resultStatus: 0
-      duration: 0
+      resultStatus: 1
+      duration: 0.2984072
       messages: 
       output: 
       stacktrace: 
@@ -704,8 +704,8 @@ MonoBehaviour:
       uniqueId: EventHub.Tests.dll/[EventHub.Tests][Signals_Test][suite]
       name: Signals_Test
       fullName: Signals_Test
-      resultStatus: 0
-      duration: 0
+      resultStatus: 1
+      duration: 0.2979747
       messages: 
       output: 
       stacktrace: 
@@ -720,11 +720,26 @@ MonoBehaviour:
       uniqueId: EventHub.Tests.dll/Signals_Test/[EventHub.Tests][Signals_Test.AllSubscribersReceiveData]
       name: AllSubscribersReceiveData
       fullName: Signals_Test.AllSubscribersReceiveData
-      resultStatus: 0
-      duration: 0
+      resultStatus: 1
+      duration: 0.0077731
       messages: 
       output: 
-      stacktrace: 
+      stacktrace: 'at Signals_Test+<>c__DisplayClass7_0.<AllSubscribersReceiveData>b__2
+        (Signals_Test+TestSignal signal) [0x00026] in D:\Dev\Unity\Spine\Assets\AppFramework\EventHub\Tests\Signals_Test.cs:68
+
+        at
+        Spine.Signals.Receiver`1[TSignal].Handle (TSignal signal) [0x00000] in D:\Dev\Unity\Spine\Assets\AppFramework\EventHub\EventHub.cs:147
+
+        at
+        Spine.Signals.Channel`1[TSignal].Emit (TSignal signal) [0x0002d] in D:\Dev\Unity\Spine\Assets\AppFramework\EventHub\EventHub.cs:125
+
+        at
+        Spine.Signals.EventHub.Send[T] (T signal) [0x00000] in D:\Dev\Unity\Spine\Assets\AppFramework\EventHub\EventHub.cs:38
+
+        at
+        Signals_Test.AllSubscribersReceiveData () [0x00052] in D:\Dev\Unity\Spine\Assets\AppFramework\EventHub\Tests\Signals_Test.cs:71
+
+'
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -737,8 +752,8 @@ MonoBehaviour:
       uniqueId: EventHub.Tests.dll/Signals_Test/[EventHub.Tests][Signals_Test.BroadcastDataStructPasses]
       name: BroadcastDataStructPasses
       fullName: Signals_Test.BroadcastDataStructPasses
-      resultStatus: 0
-      duration: 0
+      resultStatus: 1
+      duration: 0.0007895
       messages: 
       output: 
       stacktrace: 
@@ -754,8 +769,8 @@ MonoBehaviour:
       uniqueId: EventHub.Tests.dll/Signals_Test/[EventHub.Tests][Signals_Test.OncePasses]
       name: OncePasses
       fullName: Signals_Test.OncePasses
-      resultStatus: 0
-      duration: 0
+      resultStatus: 1
+      duration: 0.0008979
       messages: 
       output: 
       stacktrace: 
@@ -771,10 +786,12 @@ MonoBehaviour:
       uniqueId: EventHub.Tests.dll/Signals_Test/[EventHub.Tests][Signals_Test.Performance]
       name: Performance
       fullName: Signals_Test.Performance
-      resultStatus: 0
-      duration: 0
+      resultStatus: 1
+      duration: 0.2788229
       messages: 
-      output: 
+      output: 'Time elapsed to send 1000000 singals: 275 ms
+
+'
       stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
@@ -788,8 +805,8 @@ MonoBehaviour:
       uniqueId: EventHub.Tests.dll/Signals_Test/[EventHub.Tests][Signals_Test.RemoveAllPasses]
       name: RemoveAllPasses
       fullName: Signals_Test.RemoveAllPasses
-      resultStatus: 0
-      duration: 0
+      resultStatus: 1
+      duration: 0.0006064
       messages: 
       output: 
       stacktrace: 
@@ -805,8 +822,8 @@ MonoBehaviour:
       uniqueId: EventHub.Tests.dll/Signals_Test/[EventHub.Tests][Signals_Test.RemoveFromHandlerPasses]
       name: RemoveFromHandlerPasses
       fullName: Signals_Test.RemoveFromHandlerPasses
-      resultStatus: 0
-      duration: 0
+      resultStatus: 1
+      duration: 0.0006056
       messages: 
       output: 
       stacktrace: 
@@ -822,8 +839,8 @@ MonoBehaviour:
       uniqueId: EventHub.Tests.dll/Signals_Test/[EventHub.Tests][Signals_Test.RemovePasses]
       name: RemovePasses
       fullName: Signals_Test.RemovePasses
-      resultStatus: 0
-      duration: 0
+      resultStatus: 1
+      duration: 0.0003066
       messages: 
       output: 
       stacktrace: 
@@ -839,8 +856,8 @@ MonoBehaviour:
       uniqueId: EventHub.Tests.dll/Signals_Test/[EventHub.Tests][Signals_Test.SignalHubInstantiated]
       name: SignalHubInstantiated
       fullName: Signals_Test.SignalHubInstantiated
-      resultStatus: 0
-      duration: 0
+      resultStatus: 1
+      duration: 0.0002546
       messages: 
       output: 
       stacktrace: 
@@ -856,11 +873,26 @@ MonoBehaviour:
       uniqueId: EventHub.Tests.dll/Signals_Test/[EventHub.Tests][Signals_Test.SubscriberReceivesCorrectTypeData]
       name: SubscriberReceivesCorrectTypeData
       fullName: Signals_Test.SubscriberReceivesCorrectTypeData
-      resultStatus: 0
-      duration: 0
+      resultStatus: 1
+      duration: 0.0010445
       messages: 
       output: 
-      stacktrace: 
+      stacktrace: 'at Signals_Test+<>c.<SubscriberReceivesCorrectTypeData>b__8_1
+        (Signals_Test+TestSignal signal) [0x00000] in D:\Dev\Unity\Spine\Assets\AppFramework\EventHub\Tests\Signals_Test.cs:87
+
+        at
+        Spine.Signals.Receiver`1[TSignal].Handle (TSignal signal) [0x00000] in D:\Dev\Unity\Spine\Assets\AppFramework\EventHub\EventHub.cs:147
+
+        at
+        Spine.Signals.Channel`1[TSignal].Emit (TSignal signal) [0x0002d] in D:\Dev\Unity\Spine\Assets\AppFramework\EventHub\EventHub.cs:125
+
+        at
+        Spine.Signals.EventHub.Send[T] (T signal) [0x00000] in D:\Dev\Unity\Spine\Assets\AppFramework\EventHub\EventHub.cs:38
+
+        at
+        Signals_Test.SubscriberReceivesCorrectTypeData () [0x00054] in D:\Dev\Unity\Spine\Assets\AppFramework\EventHub\Tests\Signals_Test.cs:90
+
+'
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -873,11 +905,26 @@ MonoBehaviour:
       uniqueId: EventHub.Tests.dll/Signals_Test/[EventHub.Tests][Signals_Test.SubscriberReceivesData]
       name: SubscriberReceivesData
       fullName: Signals_Test.SubscriberReceivesData
-      resultStatus: 0
-      duration: 0
+      resultStatus: 1
+      duration: 0.0005214
       messages: 
       output: 
-      stacktrace: 
+      stacktrace: 'at Signals_Test+<>c.<SubscriberReceivesData>b__6_0 (Signals_Test+TestSignal
+        signal) [0x00000] in D:\Dev\Unity\Spine\Assets\AppFramework\EventHub\Tests\Signals_Test.cs:44
+
+        at
+        Spine.Signals.Receiver`1[TSignal].Handle (TSignal signal) [0x00000] in D:\Dev\Unity\Spine\Assets\AppFramework\EventHub\EventHub.cs:147
+
+        at
+        Spine.Signals.Channel`1[TSignal].Emit (TSignal signal) [0x0002d] in D:\Dev\Unity\Spine\Assets\AppFramework\EventHub\EventHub.cs:125
+
+        at
+        Spine.Signals.EventHub.Send[T] (T signal) [0x00000] in D:\Dev\Unity\Spine\Assets\AppFramework\EventHub\EventHub.cs:38
+
+        at
+        Signals_Test.SubscriberReceivesData () [0x0002a] in D:\Dev\Unity\Spine\Assets\AppFramework\EventHub\Tests\Signals_Test.cs:47
+
+'
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -1112,7 +1159,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/AppFramework/Spine/Command
+    - Assets/Scenes
     m_Globs: []
     m_OriginalText: 
     m_ImportLogFlags: 0
@@ -1128,7 +1175,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: be470000
     m_LastClickedID: 18366
-    m_ExpandedIDs: 00000000ba4f0000bc4f0000be4f0000c04f0000c24f0000c44f0000c64f0000c84f0000ca4f0000cc4f0000ce4f0000d04f0000d24f0000d44f0000
+    m_ExpandedIDs: 000000002c4f00002e4f0000304f0000324f0000344f0000364f0000384f00003a4f00003c4f00003e4f0000404f0000424f0000444f0000464f0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1153,24 +1200,24 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_AssetTreeState:
-    scrollPos: {x: 0, y: 60}
+    scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: ffffffff00000000ba4f0000bc4f0000be4f0000c04f0000c24f0000c44f0000c64f0000c84f0000ca4f0000cc4f0000ce4f0000d04f0000d24f0000d44f0000
+    m_ExpandedIDs: ffffffff000000002c4f00002e4f0000324f0000344f0000364f00003c4f00003e4f0000404f0000424f0000444f0000464f00005c4f0000764f0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: CommandHub
-      m_OriginalName: CommandHub
+      m_Name: 
+      m_OriginalName: 
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 3088
+      m_UserData: 0
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 0
+      m_OriginalEventType: 11
       m_IsRenamingFilename: 1
       m_ClientGUIView: {fileID: 2}
     m_SearchString: 
@@ -1232,8 +1279,8 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 999
-    y: 236
+    x: 1210
+    y: 250
     width: 995
     height: 670
   m_SerializedDataModeController:
@@ -1607,7 +1654,7 @@ MonoBehaviour:
       containerId: overlay-container--right
       floating: 0
       collapsed: 0
-      displayed: 1
+      displayed: 0
       snapOffset: {x: 48, y: 48}
       snapOffsetDelta: {x: 0, y: 0}
       snapCorner: 0
@@ -1629,6 +1676,19 @@ MonoBehaviour:
       layout: 4
       size: {x: 0, y: 0}
       sizeOverriden: 0
+    - dockPosition: 1
+      containerId: overlay-container--right
+      floating: 0
+      collapsed: 0
+      displayed: 1
+      snapOffset: {x: 48, y: 10}
+      snapOffsetDelta: {x: 0, y: 0}
+      snapCorner: 0
+      id: UnityEditor.SceneViewCameraOverlay
+      index: 9
+      layout: 4
+      size: {x: 0, y: 0}
+      sizeOverriden: 0
     m_OverlaysVisible: 1
   m_WindowGUID: bbc07f0097a1378408845eeaa6437f97
   m_Gizmos: 1
@@ -1640,9 +1700,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 0, y: 0, z: 0}
+    m_Target: {x: -2.32, y: 0.87, z: -0.25}
     speed: 2
-    m_Value: {x: 0, y: 0, z: 0}
+    m_Value: {x: -2.32, y: 0.87, z: -0.25}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -1688,13 +1748,13 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: -0.08717229, y: 0.89959055, z: -0.21045254, w: -0.3726226}
+    m_Target: {x: -0.04371063, y: -0.06230261, z: 0.002730904, w: -0.9970969}
     speed: 2
-    m_Value: {x: -0.08717229, y: 0.89959055, z: -0.21045254, w: -0.3726226}
+    m_Value: {x: -0.04371059, y: -0.062302552, z: 0.0027309014, w: -0.99709594}
   m_Size:
-    m_Target: 10
+    m_Target: 1.7820797
     speed: 2
-    m_Value: 10
+    m_Value: 1.7820797
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -1756,9 +1816,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 100c0000
-      m_LastClickedID: 0
-      m_ExpandedIDs: ece9ffff
+      m_SelectedIDs: ac550000
+      m_LastClickedID: 21932
+      m_ExpandedIDs: c0cfffff26d0ffff8ed0ffffd2d0ffff18d1ffff80d1ffffead1ffff72d2ffffb8d2ffff14d3ffff66d3ffff2ad5ffff26efffff804e0000864e0000924e0000a6550000b8550000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
