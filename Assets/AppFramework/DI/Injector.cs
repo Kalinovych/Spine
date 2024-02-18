@@ -137,30 +137,6 @@ namespace Spine.DI {
 			return default;
 		}
 
-		public T Retrieve<T>() {
-			if (providers.TryGetValue( typeof(T), out var dependencyProvider )) {
-				return (T)dependencyProvider.Get();
-			}
-
-			if (mappings.TryGetValue( typeof(T), out var dependencyProviderAction )) {
-				return (T)dependencyProviderAction( null );
-			}
-
-			return default;
-		}
-
-		public object Retrieve(Type type) {
-			if (providers.TryGetValue(type, out var dependencyProvider)) {
-				return dependencyProvider.Get();
-			}
-
-			if (mappings.TryGetValue(type, out var dependencyProviderAction)) {
-				return dependencyProviderAction(null);
-			}
-
-			return null;
-		}
-
 		/// <summary>
 		/// Resolve target dependencies marked with Inject Attribute
 		/// </summary>
