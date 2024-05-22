@@ -5,14 +5,17 @@ EditorUserSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 4
   m_ConfigSettings:
+    GraphicsSettingsInspector_UserSettings:
+      value: 18134705175a055722080a3115371d4a0d55006876786860616b0471b8b07a68ffab74f9ee2a3a30300cea1a11320d0beb1a0c25f7060f494b4cdf1b18f3045e38cb5ad8
+      flags: 0
     RecentlyUsedSceneGuid-0:
       value: 5657565e01075e5f085c0827412106444f4e402f2d2d7431742f4c6ab0b96d61
       flags: 0
     RecentlyUsedSceneGuid-1:
-      value: 5452040007075b5d5a0d5a7440770944434e487b297073627c7b4d31e0e16139
+      value: 5b0907035d010a0c5c0b547440720b44434f4b2e7f7b773575284436e7e2666e
       flags: 0
     RecentlyUsedSceneGuid-2:
-      value: 5b0907035d010a0c5c0b547440720b44434f4b2e7f7b773575284436e7e2666e
+      value: 5452040007075b5d5a0d5a7440770944434e487b297073627c7b4d31e0e16139
       flags: 0
     RecentlyUsedSceneGuid-3:
       value: 5052520452025a5f0b0a0e7049750b44474e1b2f2d2c22632f28446be6e46569
@@ -59,3 +62,4 @@ EditorUserSettings:
   m_VCOtherOverlayIcons: 1
   m_VCAllowAsyncUpdate: 1
   m_ArtifactGarbageCollection: 1
+  m_CompressAssetsOnImport: 1

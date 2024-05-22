@@ -1,6 +1,6 @@
 using UnityEngine;
 
-readonly struct Bootstrap {
+internal readonly struct Bootstrap {
 	[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
 	static void Init() {
 		Debug.Log( "[Bootstrap] Init..." );
