@@ -16,12 +16,12 @@ namespace Spine {
 				throw new ArgumentNullException( nameof(configure) );
 			}
 
-			configure( context.injector.Get<CommandHub>() );
+			configure( context.Resolve<CommandHub>() );
 			return context;
 		}
 
 		public static Context AutoConfigureCommands(this Context context) {
-			var hub = context.injector.Get<CommandHub>();
+			var hub = context.Resolve<CommandHub>();
 			var assembly = Assembly.GetCallingAssembly();
 			var commands = GetCommandTypes( assembly );
 			foreach (var commandType in commands) {

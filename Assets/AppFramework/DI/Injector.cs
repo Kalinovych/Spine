@@ -1,5 +1,6 @@
 ﻿//#define LOG_VERBOSE
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -28,7 +29,7 @@ namespace Spine.DI {
 
 		public delegate object DependencyProviderDelegate(object target);
 
-		private readonly Dictionary<Type, DependencyProviderDelegate> mappings = new();
+		private readonly ConcurrentDictionary<Type, DependencyProviderDelegate> mappings = new();
 
 		[Conditional("LOG_VERBOSE")]
 		private static void Log(object msg) => Debug.Log( $"[{nameof(Injector)}] {msg}" );
@@ -45,16 +46,18 @@ namespace Spine.DI {
 		/// <param name="instances">A list of instances of unique types</param>
 		public void AutoMap(params object[] instances) {
 			foreach (var item in instances) {
-				repository.Put( item.GetType(), item );
+				repository.Set( item.GetType(), item );
 			}
 		}
 
 		public void MapSingleton<T>() where T : new() {
 			Map<T>( target => {
-				var result = repository.Retrieve( typeof(T) );
+				var result = repository.Get( typeof(T) );
 				if (result == null) {
 					result = Resolve<T>();
-					repository.Put( typeof(T), result );
+					repository.Set( typeof(T), result );
+				} else {
+					throw new Exception( $"Singleton<{typeof(T)}>: already mapped" );
 				}
 
 				return result;
@@ -62,11 +65,11 @@ namespace Spine.DI {
 		}
 
 		public void MapSingleton<T>(T instance) {
-			mappings.Add( typeof(T), target => instance );
+			mappings.TryAdd( typeof(T), target => instance );
 		}
 
 		public void Map<T>(DependencyProviderDelegate provider) {
-			mappings.Add( typeof(T), provider );
+			mappings.TryAdd( typeof(T), provider );
 		}
 
 		// V3 //
@@ -134,30 +137,6 @@ namespace Spine.DI {
 			return default;
 		}
 
-		public T Retrieve<T>() {
-			if (providers.TryGetValue( typeof(T), out var dependencyProvider )) {
-				return (T)dependencyProvider.Get();
-			}
-
-			if (mappings.TryGetValue( typeof(T), out var dependencyProviderAction )) {
-				return (T)dependencyProviderAction( null );
-			}
-
-			return default;
-		}
-
-		public object Retrieve(Type type) {
-			if (providers.TryGetValue(type, out var dependencyProvider)) {
-				return dependencyProvider.Get();
-			}
-
-			if (mappings.TryGetValue(type, out var dependencyProviderAction)) {
-				return dependencyProviderAction(null);
-			}
-
-			return null;
-		}
-
 		/// <summary>
 		/// Resolve target dependencies marked with Inject Attribute
 		/// </summary>
@@ -169,7 +148,7 @@ namespace Spine.DI {
 
 			foreach (var injection in injectionPoints) {
 				Log( $"\tpoint: {injection.Name} : {injection.TargetType}" );
-				var dependency = repository.Retrieve( injection.TargetType );
+				var dependency = repository.Get( injection.TargetType );
 
 				if (dependency == null && providers.TryGetValue( injection.TargetType, out var provider )) {
 					dependency = provider.Get();
@@ -199,7 +178,7 @@ namespace Spine.DI {
 			object targetBoxed = default(T);
 
 			if (injectionPoint is ConstructorInjectionPoint constructorInjectionPoint) {
-				targetBoxed = Activator.CreateInstance(typeof(T), constructorInjectionPoint.Parameters.Select( p => repository.Retrieve( p.ParameterType ) ).ToArray());
+				targetBoxed = Activator.CreateInstance(typeof(T), constructorInjectionPoint.Parameters.Select( p => repository.Get( p.ParameterType ) ).ToArray());
 			}
 
 			// If there's no constructor injection point, use the default constructor
@@ -209,7 +188,12 @@ namespace Spine.DI {
 
 			return (T)targetBoxed;
 		}
-
+		
+		
+		/// <summary>
+		/// Clears all the dependencies marked with Inject Attribute
+		/// </summary>
+		/// <param name="target"></param>
 		public void Clear(object target) {
 			var injectionPoints = TypeDescriber.GetInjectionPoints( target.GetType() );
 			foreach (var injection in injectionPoints) {
@@ -221,30 +205,29 @@ namespace Spine.DI {
 	/// <summary>
 	/// Dependency Storage and Provider
 	/// </summary>
-	internal sealed class DependencyRepository // : IDependencyStorage, IDependencyProvider
-	{
-		private readonly Dictionary<Type, object> items = new();
-		
-		public void Put(Type key, object item) {
-			if (items.ContainsKey( key )) {
-				Debug.LogError( $"Two or more references of the same type <b>{key}</b> detected!" );
+	internal sealed class DependencyRepository {
+		private readonly ConcurrentDictionary<Type, object> items = new();
+    
+		public void Set(Type key, object item) {
+			if (!items.TryAdd(key, item)) {
+				Debug.LogError($"Two or more references of the same type <b>{key}</b> detected!");
 			}
-
-			items.Add( key, item );
 		}
 
-		public object Retrieve(Type key) {
-			return items.TryGetValue( key, out var item ) ? item : null;
+		public object Get(Type key) {
+			items.TryGetValue(key, out var value);
+			return value;
 		}
 	}
+
 
 	/// <summary>
 	/// Provides an information about Type injection points
 	/// </summary>
 	public static class TypeDescriber // : ITypeDescriber
 	{
-		private static readonly Dictionary<Type, IEnumerable<IInjectionPoint>> injectionPointsCache = new();
-		private static readonly Dictionary<Type, IEnumerable<IInjectionPoint>> cInjectionPointsCache = new();
+		private static readonly ConcurrentDictionary<Type, IEnumerable<IInjectionPoint>> injectionPointsCache = new();
+		private static readonly ConcurrentDictionary<Type, IEnumerable<IInjectionPoint>> cInjectionPointsCache = new();
 
 		public static IEnumerable<IInjectionPoint> GetInjectionPoints(Type targetType) {
 			// try to restore from the cache

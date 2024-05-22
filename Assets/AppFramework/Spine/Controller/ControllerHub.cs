@@ -1,12 +1,9 @@
 ﻿namespace Spine {
 	public class ControllerHub {
-		internal static ControllerHub instance;
-
 		internal static Context globalContext;
 
 		public ControllerHub(Context context) {
 			globalContext = context;
-			instance = this;
 		}
 	}
 
